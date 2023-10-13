@@ -1,0 +1,23 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+default:
+  image: archlinux:latest
+
+stages:          # List of stages for jobs, and their order of execution
+  - doc
+
+doc-job:
+  stage: doc
+  before_script:
+    - pacman -Syu --noconfirm --needed rclone make git
+    - pacman -S --noconfirm --needed python-sphinx python-sphinx-autodoc-typehints python-sphinx_rtd_theme python-myst-parser
+    - pacman -S --noconfirm --needed python-pip python-pdm python-numpy python-pytorch
+    - pacman -S --noconfirm --needed python-docutils python-torchvision python-tqdm
+    - pacman -S --noconfirm --needed python-blosc2 python-gitpython python-pycryptodome python-pyserial python-scikit-learn
+    - pacman -S --noconfirm --needed python-tabulate python-fsspec python-aiohttp fabric
+  script:
+    - pip install --break-system-packages -e .[docs] --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple --trusted-host naixtech.unice.fr
+    - make -C docs html
+    - read RCLONE_SFTP_PASS < <(rclone obscure - < ${GITLAB_LDAP_PASSWORD}) && export RCLONE_SFTP_PASS
+    - rclone sync --sftp-host naixtech.unice.fr --sftp-user gitlab docs/_build/html :sftp:/gitlab/public_html/docs/qualia

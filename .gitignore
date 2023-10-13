@@ -1,0 +1,8 @@
+pdm.lock
+.pdm-python
+qualia-core/
+qualia-plugin-snn/
+qualia-plugin-spleat/
+qualia-codegen-core/
+qualia-codegen-plugin-snn/
+qualia-codegen-plugin-spleat/
