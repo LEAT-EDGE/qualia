@@ -1,5 +1,12 @@
 # Installation
 
+```{contents} Table of Contents
+---
+depth: 3
+---
+```
+
+
 Two setups are possible and described below: developer and user.
 
 ## Common requirements

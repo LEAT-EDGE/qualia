@@ -1,5 +1,11 @@
 # Update
 
+```{contents} Table of Contents
+---
+depth: 3
+---
+```
+
 ## User setup
 
 ### Existing Python environment with Pip
