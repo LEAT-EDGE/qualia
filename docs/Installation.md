@@ -19,6 +19,8 @@ Two setups are possible and described below: developer and user.
 
 Use this setup if you do not plan on making modifications to one of Qualia's component source code. You can still develop your own, independent plugin with this setup.
 
+You can either install Qualia in an existing virtual environment with Pip, or create a new environment managed by PDM.
+
 ### Existing Python environment with Pip
 
 Any component of Qualia can be installed with `pip` in an existing environment by specifying our dedicated PyPI server URL [https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple](https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple)
@@ -83,6 +85,8 @@ Repeat this step for any additional Qualia component you want to use, in order f
 ## Developer setup
 
 Use this setup if you want to make modifications to one of Qualia's component source code.
+
+It is recommended to create a new Python environment for Qualia managed by PDM, but you can also install Qualia in an existing virtual environment with Pip.
 
 ### Additional requirements
 - Git
