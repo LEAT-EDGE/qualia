@@ -16,11 +16,18 @@ README
 
 .. toctree::
    :maxdepth: 1
-   :caption: Documentation
+   :caption: User's manual
 
    Installation
    Update
    Components
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Developer's manual
+
+   Developer/Documentation
+   Developer/CodeStyleLinter
 
 
 Indices and tables
