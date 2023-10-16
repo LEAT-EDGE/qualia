@@ -28,6 +28,7 @@ README
 
    Developer/Documentation
    Developer/CodeStyleLinter
+   Developer/TypeChecking
 
 
 Indices and tables
