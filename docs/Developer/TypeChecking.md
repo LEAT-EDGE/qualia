@@ -74,7 +74,7 @@ may be ignored for each of them by adding for example `  # noqa: TCH002` at the 
 Additionally, some imports for type checking may still trigger a circular import situation which would cause Sphinx Autodoc
 to fail. In that case, a standard `typing.TYPE_CHECKING` block should be used for the problematic import instead of Qualia's `TYPE_CHECKING`.
 
-See <Developer/Documentation> for more information about Sphinx Autodoc, and <Developer/CodeStyleLinter> for more information about the Ruff linter.
+See <project:Documentation.md> for more information about Sphinx Autodoc, and <project:CodeStyleLinter.md> for more information about the Ruff linter.
 
 ### Override decorator
 
