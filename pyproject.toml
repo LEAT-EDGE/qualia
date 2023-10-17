@@ -50,10 +50,6 @@ verify_ssl = false
 [tool.pdm.version]
 source = "scm"
 
-[tool.pdm.dev-dependencies]
-dev = [
-    "-e file:///${PROJECT_ROOT}/qualia-core#egg=qualia-core[pytorch]",
-]
 [tool.ruff]
 extend-exclude = ["third_party"]
 select = ["ALL"]
