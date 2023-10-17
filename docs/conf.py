@@ -87,12 +87,6 @@ intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
     'numpy': ('https://numpy.org/doc/stable/', None),
     'PyTorch': ('https://pytorch.org/docs/stable/', None),
-    'qualia_core': ('http://naixtech.unice.fr/~gitlab/docs/qualia-core', None),
-    'qualia_plugin_snn': ('http://naixtech.unice.fr/~gitlab/docs/qualia-plugin-snn', None),
-    'qualia_plugin_spleat': ('http://naixtech.unice.fr/~gitlab/docs/qualia-plugin-spleat', None),
-    'qualia_codegen_core': ('http://naixtech.unice.fr/~gitlab/docs/qualia-codegen-core', None),
-    'qualia_codegen_plugin_snn': ('http://naixtech.unice.fr/~gitlab/docs/qualia-codegen-plugin-snn', None),
-    'qualia_codegen_plugin_spleat': ('http://naixtech.unice.fr/~gitlab/docs/qualia-codegen-plugin-spleat', None),
 }
 
 show_authors = True
