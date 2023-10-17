@@ -28,7 +28,7 @@ homepage = "https://naixtech.unice.fr/gitlab/qualia/qualia"
 tests = ['pytest', 'pytest-dependency', 'pytest-xdist', 'pytest-env', 'dill', 'filelock']
 lint = ['ruff']
 typecheck = ['mypy', 'pyright']
-docs = ['sphinx', 'sphinx-rtd-theme', 'myst-parser']
+docs = ['pdm', 'sphinx', 'sphinx-rtd-theme', 'myst-parser']
 
 [tool.pytest.ini_options]
 markers = [
