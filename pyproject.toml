@@ -17,7 +17,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "qualia-codegen-core>=2.0.0a2.dev10",
 ]
 dynamic = ["version"]
 
