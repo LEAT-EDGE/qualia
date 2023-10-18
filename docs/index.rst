@@ -20,6 +20,7 @@ README
 
    Installation
    Update
+   User/Usage
    Components
 
 .. toctree::
