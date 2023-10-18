@@ -1,5 +1,11 @@
 # Migration from previous versions
 
+```{contents} Table of Contents
+---
+depth: 3
+---
+```
+
 ## Migration from 1.0 (known as MicroAI)
 
 Qualia was previously known as MicroAI in its 1.0 version. For users of MicroAI 1.0, Qualia 2.0 mainly brings 3 major breaking changes:
@@ -21,7 +27,7 @@ In order to migrate to Qualia 2.0 when these features are in use, the appropriat
 For example, to use the spiking neural networks and SPLEAT deployment features, add to the configuration:
 ```toml
 [bench]
-plugin = ['qualia_plugin_snn', 'qualia_plugin_spleat']
+plugins = ['qualia_plugin_snn', 'qualia_plugin_spleat']
 ```
 
 For more information about the available plugins, see: <project:Components.md>. For more information about the configuration file, see: <project:ConfigurationFile.md>.

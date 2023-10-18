@@ -10,6 +10,9 @@ depth: 3
 
 ![Component_Diagram.svg](Component_Diagram.svg)
 
+In a UML component diagram, the dotted arrow means "depends on" the component pointed by the arrow.
+For example, Qualia-CodeGen-Core is a root dependency.
+
 ## Qualia
 
 Documentation: <project:/index.rst>

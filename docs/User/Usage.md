@@ -1,5 +1,11 @@
 # Usage
 
+```{contents} Table of Contents
+---
+depth: 3
+---
+```
+
 ## Overview
 
 Qualia uses configuration files in order to describe an experiment, which consists of 
