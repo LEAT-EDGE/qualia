@@ -80,7 +80,7 @@ Add Qualia component, you can specify additional dependency groups in brackets, 
 pdm add qualia-core[pytorch]
 ```
 
-Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see [Qualia Components](Components)).
+Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see <project:User/Components.md>).
 
 ## Developer setup
 
@@ -136,7 +136,7 @@ Then install it, you can specify additional dependency groups in brackets, e.g.,
 pdm add -e ./qualia-core[pytorch] --dev
 ```
 
-Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see [Qualia Components](Components)).
+Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see <project:User/Components.md>).
 
 You can then edit the source code in each of the cloned component repository and commit as usual.
 
@@ -155,4 +155,4 @@ cd qualia-core
 pip install -e .[pytorch]
 ```
 
-Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see [Qualia Components](Components)).
+Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see <project:User/Components.md>).

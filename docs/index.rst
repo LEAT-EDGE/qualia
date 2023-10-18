@@ -21,7 +21,8 @@ README
    Installation
    Update
    User/Usage
-   Components
+   User/Components
+   User/MigrationPreviousVersions
 
 .. toctree::
    :maxdepth: 1

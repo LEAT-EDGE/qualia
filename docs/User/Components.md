@@ -12,7 +12,7 @@ depth: 3
 
 ## Qualia
 
-Documentation: <project:index.rst>
+Documentation: <project:/index.rst>
 
 ## Qualia-Core
 

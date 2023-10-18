@@ -79,4 +79,4 @@ Then run, specifying optional depencency groups in brackets:
 pip install -e .[pytorch]
 ```
 
-Repeat this step for any additional Qualia component you are using, in order from the root of the dependency graph (see [Qualia Components](Components)).
+Repeat this step for any additional Qualia component you are using, in order from the root of the dependency graph (see <project:User/Components.md>).
