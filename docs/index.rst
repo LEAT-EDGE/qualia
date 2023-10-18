@@ -21,6 +21,7 @@ README
    Installation
    Update
    User/Usage
+   User/ConfigurationFile
    User/Components
    User/MigrationPreviousVersions
 
