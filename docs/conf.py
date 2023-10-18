@@ -82,6 +82,8 @@ html_theme_options = {
     'navigation_depth': 5,
 }
 
+html_style = 'css/style.css'
+
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3/', None),
