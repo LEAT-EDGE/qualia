@@ -31,6 +31,7 @@ README
 
    Developer/RepositoryStructure
    Developer/PackageStructure
+   Developer/PluginArchitecture
    Developer/Documentation
    Developer/CodeStyleLinter
    Developer/TypeChecking
