@@ -37,3 +37,22 @@ Qualia-Core will then merge and override any conflict with the content of the fo
 Other subpackages are not imported directly. It is up to the plugin to load them from one of the imported module.
 
 For example, Qualia-Core loads the `learningframework` package from the plugins.
+The plugin can add a new learningframework with its own set of learningmodels to be used in the configuration,
+or override an existing learningframework by inheriting from it and using the same name to extend the learningmodels.
+
+Similarly, the plugin can add new model converters in `postprocessing` or override an existing one for use in the `[deploy]` section of the configuration.
+This way, the new or overriden model converter can suggest different or overriden deployers which themselves can be suggest different or overiddend evaluator modules.
+
+
+## Create a plugin
+
+It is recommend to take inspiration from the existing plugins (e.g., Qualia-Plugin-SNN or Qualia-Plugin-SPLEAT) to write a new one.
+In the future, a plugin template will be provided.
+
+A plugin is a Python project that should follow the usual packaging processes and use the common <project:RepositoryStructure.md>.
+Make sure to fill the correct project metadata in the `pyproject.toml` file as well as the dependencies.
+
+Then, you can add new Python modules in one of the subpackage listed in <project:PackageStructure.md>.
+In Qualia, each Python module generally contains one class for its implementation.
+If the Python module is suppposed to override an existing one, it should inherit from the class it overrides then only implement the required changes.
+
