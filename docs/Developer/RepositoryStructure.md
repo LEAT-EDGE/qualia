@@ -1,5 +1,11 @@
 # Repository structure
 
+```{contents} Table of Contents
+---
+depth: 3
+---
+```
+
 The core and the plugins of Qualia and Qualia-CodeGen each have their own independent git repository,
 with a number of files and directories at the root.
 Each of them are described below, in alphabetical order with the directories first.
