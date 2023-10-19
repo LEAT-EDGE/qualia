@@ -29,6 +29,8 @@ README
    :maxdepth: 1
    :caption: Developer's manual
 
+   Developer/RepositoryStructure
+   Developer/PackageStructure
    Developer/Documentation
    Developer/CodeStyleLinter
    Developer/TypeChecking

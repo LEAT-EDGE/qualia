@@ -146,6 +146,16 @@ List of settings:
 - **`kind` (string)**: name of the dataset class.
 - **`params` (array of string, optional)**: keyword parameters to pass to the dataset class constructor.
 
+### `[experimenttracking]`
+
+The experiment tracking module to use during the `train` action.
+
+For more information about available datasets, see <inv:#qualia_core.experimenttracking>.
+
+List of settings:
+- **`kind` (string)**: name of the experiment tracking class.
+- **`params` (array of string, optional)**: keyword parameters to pass to the experiment tracking class constructor.
+
 ### `[[preprocessing]]` (optional)
 
 Zero, one or more `[[preprocessing]]` sections can be present in the configuration.
