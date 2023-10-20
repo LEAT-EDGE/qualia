@@ -34,7 +34,7 @@ qualia <config.toml> <action> [config_params]
 `config_params` are optional arguments to override settings from the configuration file.
 They are specified with the format `--<key1>.<key...>.<keyn>=<value>`.
 `key` can be a string to index a dictionary or an integer to index a list. `value` is evaluated as a Python expression.
-For example, to override the `name` setting in the `[bench]` section: `--bench.name="Test"`;
+For example, to override the `name` setting in the `[bench]` section: `--bench.name=\"Test\"`;
 and to override the `disabled` parameter of the first `[[model]]`: `--model.0.disabled=True`.
 
 It it recommended to avoid adding any `config_params` as the configuration file itself should reflect all the settings for an experiment.
