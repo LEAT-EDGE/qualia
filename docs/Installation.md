@@ -104,6 +104,12 @@ git clone ssh://git@naixtech.unice.fr:2204/qualia/qualia.git
 cd qualia
 ```
 
+If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
+```
+git clone https://naixtech.unice.fr/gitlab/qualia/qualia.git
+cd qualia
+```
+
 #### Create a new dedicated in-project virtual environment
 
 If host's Python version is not 3.11, it is recommended to create a Conda environment with Python 3.11:
@@ -131,6 +137,12 @@ To add a Qualia component, e.g., Qualia-Core, first clone the repository:
 ```
 git clone ssh://git@naixtech.unice.fr:2204/qualia/qualia-core.git
 ```
+
+If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
+```
+git clone https://naixtech.unice.fr/gitlab/qualia/qualia-core.git
+```
+
 Then install it, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch:
 ```
 pdm add -e ./qualia-core[pytorch] --dev
@@ -147,6 +159,11 @@ If you have an existing Python environment with a compatible version of Python, 
 Clone the repository:
 ```
 git clone ssh://git@naixtech.unice.fr:2204/qualia/qualia-core.git
+```
+
+If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
+```
+git clone https://naixtech.unice.fr/gitlab/qualia/qualia-core.git
 ```
 
 Install it, specifying additional dependency groups in brakckets, e.g., for Qualia-Core with PyTorch:
