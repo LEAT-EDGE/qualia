@@ -107,6 +107,23 @@ List of settings:
 - **`last_run` (integer)**: last iteration to run for model training, deployment and evaluation, experiment will iterate `last_run - first_run + 1` times.
 - **`plugins` (array of string, optional)**: list of plugin package names to load in order of appearance, e.g., `['qualia_plugin_snn', 'qualia_plugin_spleat]`.
 
+### `[deploy]` (optional)
+
+Configuration for the deployment onto a target. Only required for the `prepare_deploy` and `deploy_and_evaluate` actions.
+
+For more information about available converters and their parameters, see <inv:#qualia_core.postprocessing>.
+The suggested deployers are available as the `deployers` attribute of the converter class.
+The suggested evaluator is available as the `evaluator` attribute of the deployer class.
+Plugins may also load their own converters which can suggest their own deployers and evaluators.
+
+List of settings:
+- **`target` (string)**: name of the target to deploy onto, this must match a class in the deployers suggested by the converter.
+- **`converter.kind` (string)**: the converter class to use for deployment, e.g. C code generation with `QualiaCodeGen`.
+- **`converter.params` (table, optional)**: keyword parameters to pass to the constructor of the converter class.
+- **`deployer.params` (table, optional)**: keyword parameters to pass to the deployer class constructor (which is determined from the suggested deployers and the target name).
+- **`evaluator.params` (table, optional)**: keyword parameters to pass to the evaluator class constructor (which is suggested by the deployer class)
+- **`quantize` (array of string)**: base data type to use for quantization, passed to the converter class construtor.
+
 ### `[learningframework]`
 
 The learning framework to load for this experiment.
@@ -118,24 +135,6 @@ List of settings:
 - **`kind` (string)**: name of the learningframework class to load, e.g., `PyTorch` or `Keras`.
 - **`params` (table, optional)**: keyword parameters to pass to the constructor of the loaded learningframework class.
 
-### `[deploy]` (optional)
-
-Configuration for the deployment onto a target. Only required for the `prepare_deploy` and `deploy_and_evaluate` actions.
-
-For more information about available converters and their parameters, see <inv:#qualia_core.postprocessing>.
-The suggested deployers are available as the `deployers` attribute of the converter class.
-The suggested evaluator is available as the `evaluator` attribute of the deployer class.
-Plugins may also load their own converters which can suggest their own deployers and evaluators.
-
-
-List of settings:
-- **`target` (string)**: name of the target to deploy onto, this must match a class in the deployers suggested by the converter.
-- **`converter.kind` (string)**: the converter class to use for deployment, e.g. C code generation with `QualiaCodeGen`.
-- **`converter.params` (table, optional)**: keyword parameters to pass to the constructor of the converter class.
-- **`deployer.params` (table, optional)**: keyword parameters to pass to the deployer class constructor (which is determined from the suggested deployers and the target name).
-- **`evaluator.params` (table, optional)**: keyword parameters to pass to the evaluator class constructor (which is suggested by the deployer class)
-- **`quantize` (array of string)**: base data type to use for quantization, passed to the converter class construtor.
-
 ### `[dataset]`
 
 The dataset to load.
@@ -146,7 +145,7 @@ List of settings:
 - **`kind` (string)**: name of the dataset class.
 - **`params` (array of string, optional)**: keyword parameters to pass to the dataset class constructor.
 
-### `[experimenttracking]`
+### `[experimenttracking]` (optional)
 
 The experiment tracking module to use during the `train` action.
 
