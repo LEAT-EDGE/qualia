@@ -29,9 +29,9 @@ You can also create a virtual environment for Qualia yourself.
 
 Optional dependency groups must be specified in brackets after the package name, e.g., `qualia-core[pytorch]`.
 
-For example, to install Qualia-Core with PyTorch support:
+For example, to install Qualia-Core with PyTorch and ClearML support:
 ```
-pip install -U qualia-core[pytorch] --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple --trusted-host naixtech.unice.fr 
+pip install -U qualia-core[pytorch,clearml] --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple --trusted-host naixtech.unice.fr 
 ```
 
 A Qualia component will automatically pull any other required Qualia components.
@@ -77,9 +77,9 @@ export PDM_BUILD_SCM_VERSION={{ env.config.version }}
 
 #### Add a Qualia component to the environment
 
-Add Qualia component, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch:
+Add Qualia component, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch and ClearML:
 ```
-pdm add qualia-core[pytorch]
+pdm add qualia-core[pytorch,clearml]
 ```
 
 Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see <project:User/Components.md>).
@@ -145,9 +145,9 @@ If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
 git clone https://naixtech.unice.fr/gitlab/qualia/qualia-core.git
 ```
 
-Then install it, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch:
+Then install it, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch and ClearML:
 ```
-pdm add -e ./qualia-core[pytorch] --dev
+pdm add -e ./qualia-core[pytorch,clearml] --dev
 ```
 
 Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see <project:User/Components.md>).
@@ -168,10 +168,10 @@ If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
 git clone https://naixtech.unice.fr/gitlab/qualia/qualia-core.git
 ```
 
-Install it, specifying additional dependency groups in brakckets, e.g., for Qualia-Core with PyTorch:
+Install it, specifying additional dependency groups in brakckets, e.g., for Qualia-Core with PyTorch and ClearML:
 ```
 cd qualia-core
-pip install -e .[pytorch]
+pip install -e .[pytorch, clearml]
 ```
 
 Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see <project:User/Components.md>).
