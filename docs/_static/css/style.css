@@ -3,3 +3,7 @@
 .wy-nav-content {
   max-width: unset !important;
 }
+
+.literal-block {
+  background: #f8f8f8;
+}

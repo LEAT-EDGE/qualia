@@ -69,8 +69,10 @@ pdm use "$(pwd)/.venv/bin/python"
 #### Activate the virtual environment
 
 You will need to perform this step for every new shell you open:
-```
-$(pdm venv activate)
+
+```{parsed-literal}
+$(pdm venv activate in-project)
+export PDM_BUILD_SCM_VERSION={{ env.config.version }}
 ```
 
 #### Add a Qualia component to the environment
@@ -128,7 +130,7 @@ pdm use "$(pwd)/.venv/bin/python)
 
 You will need to perform this step for every new shell you open:
 ```
-$(pdm venv activate)
+$(pdm venv activate in-project)
 ```
 
 #### Add a Qualia component to the environment

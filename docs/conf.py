@@ -56,6 +56,9 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
 ]
+
+myst_enable_extensions = ['substitution']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
