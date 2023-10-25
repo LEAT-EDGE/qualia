@@ -57,13 +57,13 @@ cd qualia-master
 If host's Python version is not 3.11, it is recommended to create a Conda environment with Python 3.11:
 ```
 pdm venv create -w conda 3.11
-pdm use .venv/bin/python
+pdm use "$(pwd)/.venv/bin/python"
 ```
 
 Otherwise you can use a simple virtualenv:
 ```
 pdm venv create -w virtualenv
-pdm use .venv/bin/python
+pdm use "$(pwd)/.venv/bin/python"
 ```
 
 #### Activate the virtual environment
@@ -115,13 +115,13 @@ cd qualia
 If host's Python version is not 3.11, it is recommended to create a Conda environment with Python 3.11:
 ```
 pdm venv create -w conda 3.11
-pdm use .venv/bin/python
+pdm use "$(pwd)/.venv/bin/python)
 ```
 
 Otherwise you can use a simple virtualenv:
 ```
 pdm venv create -w virtualenv
-pdm use .venv/bin/python
+pdm use "$(pwd)/.venv/bin/python)
 ```
 
 #### Activate the virtual environment
