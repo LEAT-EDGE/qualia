@@ -47,7 +47,6 @@ This way, the new or overriden model converter can suggest different or override
 ## Create a plugin
 
 It is recommend to take inspiration from the existing plugins (e.g., Qualia-Plugin-SNN or Qualia-Plugin-SPLEAT) to write a new one.
-In the future, a plugin template will be provided.
 
 A plugin is a Python project that should follow the usual packaging processes and use the common <project:RepositoryStructure.md>.
 Make sure to fill the correct project metadata in the `pyproject.toml` file as well as the dependencies.
@@ -56,3 +55,6 @@ Then, you can add new Python modules in one of the subpackage listed in <project
 In Qualia, each Python module generally contains one class for its implementation.
 If the Python module is suppposed to override an existing one, it should inherit from the class it overrides then only implement the required changes.
 
+
+Qualia Plugin Template provides a template project that should be used to create a new plugin.
+Follow the documentation at [Qualia Plugin Template](inv:qualia_plugin_template:std:doc#index).

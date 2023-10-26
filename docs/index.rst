@@ -35,6 +35,7 @@ README
    Developer/Documentation
    Developer/CodeStyleLinter
    Developer/TypeChecking
+   Developer/Tests
 
 
 Indices and tables

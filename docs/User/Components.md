@@ -29,6 +29,10 @@ Documentation: <inv:qualia_plugin_snn:std:doc#index>
 
 Documentation: <inv:qualia_plugin_spleat:std:doc#index>
 
+## Qualia-Plugin-Template
+
+Documentation: <inv:qualia_plugin_template:std:doc#index>
+
 ## Qualia-CodeGen-Core
 
 Documentation: <inv:qualia_codegen_core:std:doc#index>
