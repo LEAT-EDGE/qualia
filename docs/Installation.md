@@ -23,15 +23,18 @@ You can either install Qualia in an existing virtual environment with Pip, or cr
 
 ### Existing Python environment with Pip
 
-Any component of Qualia can be installed with `pip` in an existing environment by specifying our dedicated PyPI server URL [https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple](https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple)
+Any component of Qualia can be installed with `pip` in an existing environment.
 
 You can also create a virtual environment for Qualia yourself.
 
 Optional dependency groups must be specified in brackets after the package name, e.g., `qualia-core[pytorch]`.
 
+The public open-source release is hosted on the official PyPI index.
+The private development release is hosted on our private PyPI server and requires specifying its URL.
+
 For example, to install Qualia-Core with PyTorch and ClearML support:
-```
-pip install -U qualia-core[pytorch,clearml] --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple --trusted-host naixtech.unice.fr 
+```{parsed-literal}
+pip install -U qualia-core[pytorch,clearml]{{qualia_extra_index}}
 ```
 
 A Qualia component will automatically pull any other required Qualia components.
@@ -44,7 +47,7 @@ A Qualia component will automatically pull any other required Qualia components.
     - Or with Pip: `pip install pdm`
 
 #### Dowload and extract the base Qualia project
-Download: [https://naixtech.unice.fr/gitlab/qualia/qualia/-/archive/master/qualia-master.tar.gz](https://naixtech.unice.fr/gitlab/qualia/qualia/-/archive/master/qualia-master.tar.gz)
+Download: {{ '<{}>'.format(qualia_archive_url) }}
 
 Extract it:
 ```
@@ -101,14 +104,14 @@ It is recommended to create a new Python environment for Qualia managed by PDM, 
     - Or with Pip: `pip install pdm`
 
 #### Clone the base Qualia repository
-```
-git clone ssh://git@naixtech.unice.fr:2204/qualia/qualia.git
+```{parsed-literal}
+git clone {{ qualia_git_ssh_base_url }}/qualia.git
 cd qualia
 ```
 
 If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
-```
-git clone https://naixtech.unice.fr/gitlab/qualia/qualia.git
+```{parsed-literal}
+git clone {{ qualia_git_https_base_url }}/qualia.git
 cd qualia
 ```
 
@@ -136,13 +139,13 @@ $(pdm venv activate in-project)
 #### Add a Qualia component to the environment
 
 To add a Qualia component, e.g., Qualia-Core, first clone the repository:
-```
-git clone ssh://git@naixtech.unice.fr:2204/qualia/qualia-core.git
+```{parsed-literal}
+git clone {{ qualia_git_ssh_base_url }}/qualia-core.git
 ```
 
 If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
-```
-git clone https://naixtech.unice.fr/gitlab/qualia/qualia-core.git
+```{parsed-literal}
+git clone {{ qualia_git_https_base_url }}/qualia-core.git
 ```
 
 Then install it, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch and ClearML:
@@ -159,13 +162,13 @@ You can then edit the source code in each of the cloned component repository and
 If you have an existing Python environment with a compatible version of Python, use `pip` to install Qualia components inside of it.
 
 Clone the repository:
-```
-git clone ssh://git@naixtech.unice.fr:2204/qualia/qualia-core.git
+```{parsed-literal}
+git clone {{ qualia_git_ssh_base_url }}/qualia-core.git
 ```
 
 If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
-```
-git clone https://naixtech.unice.fr/gitlab/qualia/qualia-core.git
+```{parsed-literal}
+git clone {{ qualia_git_https_base_url }}/qualia-core.git
 ```
 
 Install it, specifying additional dependency groups in brakckets, e.g., for Qualia-Core with PyTorch and ClearML:

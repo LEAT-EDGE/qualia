@@ -13,8 +13,8 @@ depth: 3
 Pip will not handle the update of all your Python packages. It will only allow updating the specified Qualia's component and installing new dependencies when required.
 
 Run, specifying all the Qualia's components your are using and their optional depencency groups in brackets:
-```
-pip install -U qualia-core[pytorch] --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple --trusted-host naixtech.unice.fr 
+```{parsed-literal}
+pip install -U qualia-core[pytorch]{{qualia_extra_index}}
 ```
 
 #### Dedicated in-project environment with PDM

@@ -91,6 +91,6 @@ The documentation will be built as HTML under the `docs/_build/html/` directory,
 
 ## CI/CD
 
-After pushing new commits, the Gitlab CI/CD script (`.gitlab-ci.yml`) will automatically update the online documentation
-(currently hosted at <https://naixtech.unice.fr/~gitlab/docs/>) as the last stage of the process, after running tests,
+After pushing new commits, the Gitlab CI/CD script (`.gitlab-ci.yml`) or the GitHub Actions script (`.github/workflows/doc.yml`) will automatically update the online documentation
+(currently hosted at {{ '<{}/qualia>'.format(qualia_doc_base_url) }}) as the last stage of the process, after running tests,
 linter and typing checks, and uploading the Python package (depending on the component).

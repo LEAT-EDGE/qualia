@@ -28,6 +28,16 @@ author = 'Pierre-Emmanuel Novac'
 
 qualia_doc_base_url = 'https://leat-edge.github.io' if os.getenv('GITHUB_ACTIONS') else 'http://naixtech.unice.fr/~gitlab/docs'
 
+myst_substitutions = {
+        'qualia_git_ssh_base_url': 'git@github.com:LEAT-EDGE' if os.getenv('GITHUB_ACTIONS') else 'ssh://git@naixtech.unice.fr:2204/qualia',
+        'qualia_git_https_base_url': 'https://github.com/LEAT-EDGE' if os.getenv('GITHUB_ACTIONS') else 'https://naixtech.unice.fr/gitlab/qualia',
+        'qualia_archive_url': ('https://github.com/LEAT-EDGE/qualia/archive/refs/heads/master.tar.gz'
+                        if os.getenv('GITHUB_ACTIONS') else 'https://naixtech.unice.fr/gitlab/qualia/qualia/-/archive/master/qualia-master.tar.gz'),
+        'qualia_extra_index': ('' if os.getenv('GITHUB_ACTIONS')
+                               else ' --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple --trusted-host naixtech.unice.fr'),
+        'qualia_doc_base_url': qualia_doc_base_url,
+}
+
 # The full version, including alpha/beta/rc tags
 
 def pdm_get_version(root_path: Path) -> str:
