@@ -29,9 +29,9 @@ You can also create a virtual environment for Qualia yourself.
 
 Optional dependency groups must be specified in brackets after the package name, e.g., `qualia-core[pytorch]`.
 
-For example, to install Qualia-Core with PyTorch support:
+For example, to install Qualia-Core with PyTorch and ClearML support:
 ```
-pip install -U qualia-core[pytorch] --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple --trusted-host naixtech.unice.fr 
+pip install -U qualia-core[pytorch,clearml] --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple --trusted-host naixtech.unice.fr 
 ```
 
 A Qualia component will automatically pull any other required Qualia components.
@@ -57,30 +57,32 @@ cd qualia-master
 If host's Python version is not 3.11, it is recommended to create a Conda environment with Python 3.11:
 ```
 pdm venv create -w conda 3.11
-pdm use .venv/bin/python
+pdm use "$(pwd)/.venv/bin/python"
 ```
 
 Otherwise you can use a simple virtualenv:
 ```
 pdm venv create -w virtualenv
-pdm use .venv/bin/python
+pdm use "$(pwd)/.venv/bin/python"
 ```
 
 #### Activate the virtual environment
 
 You will need to perform this step for every new shell you open:
-```
-$(pdm venv activate)
+
+```{parsed-literal}
+$(pdm venv activate in-project)
+export PDM_BUILD_SCM_VERSION={{ env.config.version }}
 ```
 
 #### Add a Qualia component to the environment
 
-Add Qualia component, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch:
+Add Qualia component, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch and ClearML:
 ```
-pdm add qualia-core[pytorch]
+pdm add qualia-core[pytorch,clearml]
 ```
 
-Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see [Qualia Components](Components)).
+Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see <project:User/Components.md>).
 
 ## Developer setup
 
@@ -104,25 +106,31 @@ git clone ssh://git@naixtech.unice.fr:2204/qualia/qualia.git
 cd qualia
 ```
 
+If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
+```
+git clone https://naixtech.unice.fr/gitlab/qualia/qualia.git
+cd qualia
+```
+
 #### Create a new dedicated in-project virtual environment
 
 If host's Python version is not 3.11, it is recommended to create a Conda environment with Python 3.11:
 ```
 pdm venv create -w conda 3.11
-pdm use .venv/bin/python
+pdm use "$(pwd)/.venv/bin/python"
 ```
 
 Otherwise you can use a simple virtualenv:
 ```
 pdm venv create -w virtualenv
-pdm use .venv/bin/python
+pdm use "$(pwd)/.venv/bin/python"
 ```
 
 #### Activate the virtual environment
 
 You will need to perform this step for every new shell you open:
 ```
-$(pdm venv activate)
+$(pdm venv activate in-project)
 ```
 
 #### Add a Qualia component to the environment
@@ -131,12 +139,18 @@ To add a Qualia component, e.g., Qualia-Core, first clone the repository:
 ```
 git clone ssh://git@naixtech.unice.fr:2204/qualia/qualia-core.git
 ```
-Then install it, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch:
+
+If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
 ```
-pdm add -e ./qualia-core[pytorch] --dev
+git clone https://naixtech.unice.fr/gitlab/qualia/qualia-core.git
 ```
 
-Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see [Qualia Components](Components)).
+Then install it, you can specify additional dependency groups in brackets, e.g., for Qualia-Core with Pytorch and ClearML:
+```
+pdm add -e ./qualia-core[pytorch,clearml] --dev
+```
+
+Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see <project:User/Components.md>).
 
 You can then edit the source code in each of the cloned component repository and commit as usual.
 
@@ -149,10 +163,15 @@ Clone the repository:
 git clone ssh://git@naixtech.unice.fr:2204/qualia/qualia-core.git
 ```
 
-Install it, specifying additional dependency groups in brakckets, e.g., for Qualia-Core with PyTorch:
+If you do not have an SSH key registered in Gitlab, use the HTTPS URL instead:
 ```
-cd qualia-core
-pip install -e .[pytorch]
+git clone https://naixtech.unice.fr/gitlab/qualia/qualia-core.git
 ```
 
-Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see [Qualia Components](Components)).
+Install it, specifying additional dependency groups in brakckets, e.g., for Qualia-Core with PyTorch and ClearML:
+```
+cd qualia-core
+pip install -e .[pytorch, clearml]
+```
+
+Repeat this step for any additional Qualia component you want to use, in order from the root of the dependency graph (see <project:User/Components.md>).

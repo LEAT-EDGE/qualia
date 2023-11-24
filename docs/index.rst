@@ -20,15 +20,22 @@ README
 
    Installation
    Update
-   Components
+   User/Usage
+   User/ConfigurationFile
+   User/Components
+   User/MigrationPreviousVersions
 
 .. toctree::
    :maxdepth: 1
    :caption: Developer's manual
 
+   Developer/RepositoryStructure
+   Developer/PackageStructure
+   Developer/PluginArchitecture
    Developer/Documentation
    Developer/CodeStyleLinter
    Developer/TypeChecking
+   Developer/Tests
 
 
 Indices and tables

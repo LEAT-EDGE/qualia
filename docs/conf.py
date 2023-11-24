@@ -56,6 +56,9 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
 ]
+
+myst_enable_extensions = ['substitution']
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -81,6 +84,8 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     'navigation_depth': 5,
 }
+
+html_style = 'css/style.css'
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
