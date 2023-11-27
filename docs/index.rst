@@ -9,10 +9,9 @@ Welcome to Qualia's documentation!
 ==================================
 :Version: |version|
 
-README
+Qualia
 ======
-.. include:: ../README.md
-   :parser: myst_parser.sphinx_
+End-to-end training, quantization and deployment framework for deep neural networks on embedded devices.
 
 .. toctree::
    :maxdepth: 1
