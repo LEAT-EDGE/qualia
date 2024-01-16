@@ -23,6 +23,7 @@ End-to-end training, quantization and deployment framework for deep neural netwo
    User/ConfigurationFile
    User/Components
    User/MigrationPreviousVersions
+   Changelog
 
 .. toctree::
    :maxdepth: 1
