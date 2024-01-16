@@ -6,7 +6,7 @@ depth: 3
 ---
 ```
 
-## 2.1.0
+## 2.1.0 (16/01/2024)
 
 ### Qualia-Core
 
@@ -67,10 +67,10 @@ Existing models using nearest rounding mode will have to be re-quantized and thi
 - `graph.layers`: fix weights property inheritance
 
 
-## 2.0.0
+## 2.0.0 (24/11/2023)
 
 Initial release of Qualia
 
-## 1.0.0
+## 1.0.0 (15/09/2021)
 
 Initial release of MicroAI
