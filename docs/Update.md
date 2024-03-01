@@ -31,7 +31,7 @@ $(pdm venv activate)
 
 Then run:
 ```
-pdm update
+pdm update --update-all
 ```
 
 ## Developer setup
@@ -62,7 +62,7 @@ $(pdm venv activate)
 
 Then run:
 ```
-pdm update
+pdm update --update-all
 ```
 
 #### Existing environment with Pip
