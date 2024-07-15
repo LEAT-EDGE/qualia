@@ -6,6 +6,70 @@ depth: 3
 ---
 ```
 
+## 2.3.0 (15/07/2024)
+
+### Qualia-Core
+
+#### New features
+- Bump maximum Python version to 3.12.
+- `learningframework.PyTorch`: custom metric name for checkpoints with `checkpoint_metric` param.
+- `learningframework.PyTorch`: optionally disable confusion matrix with `enable_confusion_matrix` param.
+- `learningframework.PyTorch`: custom loss with `loss` param.
+- `learningframework.PyTorch`: custom metric selection with `metrics` param.
+- Add `BrainMIX` dataset.
+- Add `Amplitude` DataAugmentation.
+- Add `CopySet` PreProcessing.
+- `postprocessing.Keras2TFLite`, `postprocessing.RemoveKerasSoftmax`, `postprocessing.Torch2Keras`: add support for Keras 3.x.
+- Add `VisualizeFeatureMaps` PostProcessing.
+- `postprocessing.FuseBatchNorm`: add `evaluate` param to optionally disable evaluation.
+- `learningmodel.pytorch.Quantizer`: add `v` tensor type for more flexibility with Qualia-Plugin-SNN.
+
+#### Bug fixes
+- `preprocessing.DatasetSplitterBySubjects`: add `dest` set to available sets.
+- `preprocessing.DatasetSplitter`: update `dest` info set.
+- `learningframework.PyTorch`: fix default metric for checkpoint (`valavgclsacc`).
+- `learningframework.PyTorch`: fix seeding after several training (integer overflow).
+- `learningframework.PyTorch`: micro computation for prec, rec, and f1 metrics.
+- Root logger stdout stream can output DEBUG level so that child logger can log debug messages. Default level is still INFO.
+- `learningmodel.pytorch.layers.QuantizedLayer`: fix multiple inheritance Protocol on Python 3.10.
+- Fix parsing of `[[parameter_research]]` section in configuration file. Actual behaviour of `parameter_research` is still untested.
+
+#### Breaking changes
+- Some metrics previously computed as macro (prec, rec, f1) are now computed as micro, results will be different on unbalanced datasets.
+
+### Qualia-Plugin-SNN
+
+#### New features
+- Bump maximum Python version to 3.12.
+- `postprocessing.EnergyEstimationMetric`: print `ModelGraph`.
+- `postprocessing.EnergyEstimationMetric`: trace `GlobalSumPooling` (not counted in metric).
+- `learningmodel.pytorch.layers.quantized_SNN_layers.py`: membrane potential uses new tensor type `v` to enable quantizer configuration decoupled from activations.
+
+#### Bug fixes
+- `learningmodel.pytorch.SNN`: inherit from SpikingJelly's `StepModule` to avoid warning when using `set_step_mode()` on the network.
+- `postprocessing.FuseBatchNorm`: copy `step_mode` and inherit returned `GraphModule` from SpikingJelly's `StepModule`.
+- `pyproject.toml`: require `pytorch` dependency group of `qualia-core`.
+
+### Qualia-CodeGen-Core
+
+#### New features
+- Bump maximum Python version to 3.12.
+- `graph.KerasModelGraph`: Add support for Keras 3.x.
+- `graph.KerasModelGraph`: add support for `padding='same'` param of `Conv` layers.
+
+#### Bug fixes
+- `graph.TorchModelGraph`: fix ouput shape for methods.`
+- `graph.TorchModelGraph`: keep first dim as-is when generating dummy input (propagate timestep dim with Qualia-CodeGen-Plugin-SNN).
+
+### Qualia-CodeGen-Plugin-SNN
+
+#### New features
+- Bump maximum Python version to 3.12.
+
+#### Bug fixes
+- `graph.TorchModelGraph`: reset network to make sure potential are not initialized with wrong shape.
+
+
 ## 2.2.0 (01/03/2024)
 
 ### Qualia-Core
