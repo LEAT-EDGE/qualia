@@ -29,6 +29,10 @@ Documentation: <inv:qualia_plugin_snn:std:doc#index>
 
 Documentation: <inv:qualia_plugin_spleat:std:doc#index>
 
+## Qualia-Plugin-SOM
+
+Documentation: <inv:qualia_plugin_som:std:doc#index>
+
 ## Qualia-Plugin-Template
 
 Documentation: <inv:qualia_plugin_template:std:doc#index>
@@ -44,3 +48,7 @@ Documentation: <inv:qualia_codegen_plugin_snn:std:doc#index>
 ## Qualia-CodeGen-Plugin-SPLEAT
 
 Documentation: <inv:qualia_codegen_plugin_spleat:std:doc#index>
+
+## Qualia-CodeGen-Plugin-SOM
+
+Documentation: <inv:qualia_codegen_plugin_som:std:doc#index>

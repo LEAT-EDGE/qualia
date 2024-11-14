@@ -107,10 +107,12 @@ intersphinx_mapping = {
     'qualia_core': (f'{qualia_doc_base_url}/qualia-core', None),
     'qualia_plugin_snn': (f'{qualia_doc_base_url}/qualia-plugin-snn', None),
     'qualia_plugin_spleat': (f'{qualia_doc_base_url}/qualia-plugin-spleat', None),
+    'qualia_plugin_som': (f'{qualia_doc_base_url}/qualia-plugin-som', None),
     'qualia_plugin_template': (f'{qualia_doc_base_url}/qualia-plugin-template', None),
     'qualia_codegen_core': (f'{qualia_doc_base_url}/qualia-codegen-core', None),
     'qualia_codegen_plugin_snn': (f'{qualia_doc_base_url}/qualia-codegen-plugin-snn', None),
     'qualia_codegen_plugin_spleat': (f'{qualia_doc_base_url}/qualia-codegen-plugin-spleat', None),
+    'qualia_codegen_plugin_som': (f'{qualia_doc_base_url}/qualia-codegen-plugin-som', None),
 }
 
 show_authors = True
