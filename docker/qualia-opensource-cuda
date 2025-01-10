@@ -1,0 +1,68 @@
+# Use NVIDIA CUDA base image
+FROM nvidia/cuda:12.1.0-devel-ubuntu22.04
+
+# Prevent timezone prompt
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y software-properties-common && \
+    apt-get install -y wget && \
+    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
+    apt-add-repository "deb https://apt.kitware.com/ubuntu/ jammy main" && \
+    apt-get update && apt-get install -y \
+    python3.11 \
+    python3.11-dev \
+    python3.11-venv \
+    python3-pip \
+    git \
+    build-essential \
+    curl \
+    cmake \
+    ninja-build \
+    gcc \
+    openssh-server \
+    graphviz \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Python 3.11 as default
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# Ensure pip is properly linked to Python 3.11
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.11 && \
+    ln -sf /usr/local/bin/pip /usr/bin/pip && \
+    ln -sf /usr/local/bin/pip3 /usr/bin/pip3
+
+# Configure SSH
+RUN mkdir /var/run/sshd && \
+    echo 'root:root' | chpasswd && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+# Set working directory
+WORKDIR /app
+
+# Install Python packages
+RUN python3.11 -m pip install --no-cache-dir --pre -U pip && \
+    python3.11 -m pip install --no-cache-dir --pre -U \
+        torch-optimizer \
+        graphviz \
+        pdm \
+        pdm-backend \
+        tensorflow \
+        matplotlib \
+        numpy \
+        pydot && \
+    python3.11 -m pip install --no-cache-dir --pre -U "qualia-core[codegen,tensorflow,pytorch,gtsrb,gsc,dataaugmentation_image,clearml,visualize,deployment-sparkfunedge,evaluation-host-tflite,evaluation-target-qualia,tests,lint,typecheck,docs]" \
+        --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple \
+        --trusted-host naixtech.unice.fr 
+
+# Configure environment
+ENV PYTHONPATH=/app/src
+ENV CUBLAS_WORKSPACE_CONFIG=:4096:8
+ENV PYTHONHASHSEED=2
+
+# Expose SSH port
+EXPOSE 22
+
+# Start SSH service
+CMD ["/usr/sbin/sshd", "-D"]
