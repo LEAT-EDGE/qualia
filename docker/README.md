@@ -80,9 +80,16 @@ ssh-keygen -f '/home/$USER/.ssh/known_hosts' -R '[localhost]:2222'
 # Both commands do the same thing, just using different ways to reference your home directory
 ```
 
-### File Transfer
+### Using Custom Configs and Datasets
+You can mount a volume with Docker or transfer the file using scp.
+#### Option 1: Mount Local Directory
 
-Transfer files to and from the container using SCP:
+```bash
+# Run the container and mounts your current directory to `/app` in the container.
+docker run -d --gpus all -p 2222:22 -v .:/app qualia:cuda
+```
+
+#### Option 2: Transfer Files via SCP
 
 ```bash
 # Copy files TO the container
