@@ -81,7 +81,7 @@ ssh-keygen -f '/home/$USER/.ssh/known_hosts' -R '[localhost]:2222'
 ```
 
 ### Using Custom Configs and Datasets
-You can mount a volume with Docker or transfer the file using scp.
+You can mount a volume with Docker or transfer the files using SCP.
 #### Option 1: Mount Local Directory
 
 ```bash
