@@ -1,265 +1,436 @@
-# Configuration file
+# Qualia Configuration Guide
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
+## Overview
 
-The configuration file describes an experiment, which consists of 
-a dataset, dataset preprocessing steps, learning model, training configuration, learning model postprocessing steps and a deployment configuration.
+Qualia uses TOML configuration files to define machine learning experiments. This guide explains each configuration section and its available options.
 
-## TOML format
+## Basic Structure
 
-The configuration file format is [TOML](https://toml.io/), an [INI](https://en.wikipedia.org/wiki/INI_file)-like format.
+A configuration file consists of several sections. Here's a minimal example:
 
-The configuration is fundamentally a key-value mapping, i.e., a dictionary, where
-the value can be a container such as another dictionary (called a Table in TOML) or a list (called an Array in TOML),
-allowing hierarchical settings, or a literal such as a string, a number or a boolean.
-These values are parsed in Python and converted to nested `dict`, `list`, `str`, `int`, `float`, and `bool` types.
-
-### Tables
-
-Tables (i.e., dictionaries) can be expressed with 3 possibles syntaxes:
-
-1. Block-style
 ```toml
-[mydict]
-mykey = "myvalue"
+[bench]
+name = "my_experiment"
+seed = 42
+first_run = 1
+last_run = 1
+
+[learningframework]
+kind = "PyTorch"
+
+[dataset]
+kind = "UCI_HAR"
+
+[model_template]
+kind = "CNN"
+epochs = 10
 ```
 
-2. Key-style
+## Required Sections
+
+### 1. Bench Settings
+
 ```toml
-mydict.mykey = "myvalue"
+[bench]
+name = "my_experiment"
+seed = 42
+first_run = 1
+last_run = 1
+plugins = ["qualia_plugin_snn"]  # Optional
 ```
 
-3. Inline-style
-```
-mydict = { mykey = "myvalue" }
-```
+Available settings:
+- `name`: String, experiment name for logging
+- `seed`: Integer, random seed for reproducibility
+- `first_run`: Integer, starting iteration (allow in case of crash to not start from the beginning)
+- `last_run`: Integer, ending iteration
+- `plugins`: Optional list of plugin names
+	- `"qualia_plugin_snn"`
+	- `"qualia_plugin_som"`
+	- `"qualia_plugin_spleat"`
+### 2. Learning Framework
 
-They can be nested with the `.` separator, e.g., `[mydict1.mydict2]` or `mydict1.mydict2.mykey = "myvalue"`
-
-In Qualia's configuration files, syntax 1. is generally used
-for top-level sections, syntax 3. is discouraged, and syntax 2. is generally used for hierarchical settings inside a section.
-
-### Arrays
-
-Arrays (i.e. list) can be expressed with 2 possible syntaxes:
-
-1. Block-style, array of tables only
 ```toml
-[[mylist]]
-mykey = "myvalue1"
-
-[[mylist]]
-mykey = "myvalue2"
+[learningframework]
+kind = "PyTorch"
 ```
-This creates a list containing 2 elements, each of them being a dictionary with a single "mykey" key,
-the first one with value `"value1"` and the second one with `"value2"`.
-The blocks are read in the order they are written in the file to build the list.
 
-2. Inline-style
+Supported frameworks:
+- `"PyTorch"`
+- `"Keras"`
+
+### 3. Dataset Configuration
+
 ```toml
-mylist = ["myvalue1", "myvalue2"]
+# UCI_HAR example
+[dataset]
+kind = "UCI_HAR"
+params.variant = "raw"
+params.path = "data/UCI HAR Dataset/"
+
+# CIFAR-10 example
+[dataset]
+kind = "CIFAR10"
+params.path = "data/cifar10/"
+params.dtype = "float32"
+
+# CORe50 example
+[dataset]
+kind = "CORe50"
+params.path = "data/core50/"
+params.variant = "category"
+
+# GSC example
+[dataset]
+kind = "GSC"
+params.path = "data/speech_commands/"
+params.variant = "v2"
+params.subset = "digits"
+params.train_valid_split = true
+
+# WSMNIST example
+[dataset]
+kind = "WSMNIST"
+params.path = "data/wsmnist/"
+params.variant = "spoken"
+
+# BrainMIX example
+[dataset]
+kind = "BrainMIX"
+params.path = "data/brainmix/"
 ```
-This creates a simple list with 2 elements of different values.
 
-In Qualia's configuration files, syntax 1. is generally used for top-level sections and syntax 2. is used for settings inside a section.
-
-### Booleans
-
-Booleans are written as `true` or `false`, without a capital letter, and translate directly to Python's `True` or `False`.
-
-### Int, Float, Str
-
-These types are written the same as in Python and translate directly to the Python type.
-
-### Null-type
-
-TOML does not have any null type (or an equivalent of Python's `None`), see [this issue](https://github.com/toml-lang/toml/issues/30).
-If absolutely required, a `false` literal might be used instead, and manually converted to `None` in Python.
-
-### Comments
-
-Comments start with a `#` at the end of a line (empty or not).
-
-## Qualia configuration structure
-
-A Qualia configuration file is divided in multiple sections described below.
-
-Each section contains a list of settings.
-The TOML type is provided in the description whenever possible.
-Settings are mandatory unless described as optional.
-
-**Warning**: unrecognized sections are silently ignored. Unrecognized settings may be silently ignored depending on their location.
-
-Example configuration files are available in the `conf` folder of the Qualia-Core and Qualia-Plugins source code repositories.
-
-### `[bench]`
-
-The `[bench]` section contains some general settings for the experiment described in the configuration file.
-
-List of settings:
-- **`name` (string)**: name of the experiment, used for the logs output folder among other things.
-- **`seed` (integer)**: global seed to set for various random generators (Python, NumPy, PyTorch, Tensorflow…) at the beginning of the experiment.
-- **`first_run` (integer)**: first iteration to run for model training, deployment and evaluation.
-- **`last_run` (integer)**: last iteration to run for model training, deployment and evaluation, experiment will iterate `last_run - first_run + 1` times.
-- **`plugins` (array of string, optional)**: list of plugin package names to load in order of appearance, e.g., `['qualia_plugin_snn', 'qualia_plugin_spleat]`.
-
-### `[deploy]` (optional)
-
-Configuration for the deployment onto a target. Only required for the `prepare_deploy` and `deploy_and_evaluate` actions.
-
-For more information about available converters and their parameters, see <inv:#qualia_core.postprocessing>.
-The suggested deployers are available as the `deployers` attribute of the converter class.
-The suggested evaluator is available as the `evaluator` attribute of the deployer class.
-Plugins may also load their own converters which can suggest their own deployers and evaluators.
-
-List of settings:
-- **`target` (string)**: name of the target to deploy onto, this must match a class in the deployers suggested by the converter.
-- **`converter.kind` (string)**: the converter class to use for deployment, e.g. C code generation with `QualiaCodeGen`.
-- **`converter.params` (table, optional)**: keyword parameters to pass to the constructor of the converter class.
-- **`deployer.params` (table, optional)**: keyword parameters to pass to the deployer class constructor (which is determined from the suggested deployers and the target name).
-- **`evaluator.params` (table, optional)**: keyword parameters to pass to the evaluator class constructor (which is suggested by the deployer class)
-- **`quantize` (array of string)**: base data type to use for quantization, passed to the converter class construtor.
-
-### `[learningframework]`
-
-The learning framework to load for this experiment.
-
-For more information about available learning frameworks and their parameters, see <inv:#qualia_core.learningframework>.
-Plugins may also load their own learning frameworks.
-
-List of settings:
-- **`kind` (string)**: name of the learningframework class to load, e.g., `PyTorch` or `Keras`.
-- **`params` (table, optional)**: keyword parameters to pass to the constructor of the loaded learningframework class.
-
-### `[dataset]`
-
-The dataset to load.
-
-For more information about available datasets, see <inv:#qualia_core.dataset>.
-
-List of settings:
-- **`kind` (string)**: name of the dataset class.
-- **`params` (array of string, optional)**: keyword parameters to pass to the dataset class constructor.
-
-### `[experimenttracking]` (optional)
-
-The experiment tracking module to use during the `train` action.
-
-For more information about available datasets, see <inv:#qualia_core.experimenttracking>.
-
-List of settings:
-- **`kind` (string)**: name of the experiment tracking class.
-- **`params` (array of string, optional)**: keyword parameters to pass to the experiment tracking class constructor.
-
-### `[[preprocessing]]` (optional)
-
-Zero, one or more `[[preprocessing]]` sections can be present in the configuration.
-They correspond to preprocessing modules to apply successively after loading the dataset in the `preprocess_data` action and before exporting the data.
-
-For more information about available preprocessing modules and their parameters, see <inv:#qualia_core.preprocessing>.
-Plugins may also load their own preprocessing modules or override existing ones.
-
-List of settings:
-- **`kind` (string)**: name of the preprocessing class to apply.
-- **`params` (array of string, optional)**: keyword parameters to pass to the preprocessing class constructor.
-
-### `[[data_augmentation]]` (optional)
-
-Zero, one or more `[[data_augmentation]]` sections can be present in the configuration.
-They correspond to dataaugmentation modules to apply successively during training to the data before injecting it into the model in the `training` action.
-
-Dataaugmentation modules with their `before` attribute will all be applied before sending the data to the device (e.g., GPU).
-Dataaugmentation modules with their `after` attribute will all be applied after sending the data to the device (e.g., GPU).
-In order words, the ordering of dataaugmentation modules only affect the `before` and the `after` independently,
-as modules marked `before` will always be applied before the modules marked `after`.
-A dataugmentation module cannot have both `before` and `after` set to `true`.
-
-Dataaugmentation modules with their `evaluate` attribute set to `true` will also affect inference, both in the  `training` and the `deploy_and_evaluate` actions.
-
-For more information about available preprocessing modules and their parameters, see <inv:#qualia_core.dataaugmentation>.
-
-List of settings:
-- **`kind` (string)**: name of the preprocessing class to apply.
-- **`params` (array of string, optional)**: keyword parameters to pass to the preprocessing class constructor.
-- **`params.before` (boolean, optional)**: if `true`, apply before transfering the data to the device (e.g., GPU), default to `false`.
-- **`params.after` (boolean, optional)**: if `true`, apply after transfering the data to the device (e.g., GPU), default to `true`.
-- **`params.evaluate` (boolean, optional)**: if `true`, apply during inference as well, default to `false`.
-
-### `[[postprocessing]]` (optional)
-
-Zero, one or more `[[postprocessing]]` sections can be present in the configuration.
-They correspond to postprocessing modules to apply successively on the model after performing the initial training in the `train` action.
-Postprocessing modules are also applied after loading the model in the `prepare_deploy` and `deploy_and_evaluate` actions.
-
-Postprocessing module can change the name of a model the learning framework currently in use.
-These transformations are applied during the application of the module in the `training` action,
-but before instantiating the model in the `prepare_deploy` and `deploy_and_evaluate actions`.
-
-For more information about available postprocessing modules and their parameters, see <inv:#qualia_core.postprocessing>.
-Plugins may also load their own postprocessing modules or override existing ones.
-
-List of settings:
-- **`kind` (string)**: name of the preprocessing class to apply.
-- **`params` (array of string, optional)**: keyword parameters to pass to the preprocessing class constructor.
-- **`export` (boolean, optional)**: if `true`, save the weights of the model afterwards, default to `false`.
-  This may or may not erase the existing model weights depening on whether the postprocessing module changes the name of the model.
-
-### `[model_template]`
-
-Common training and model settings that are inherited by each of the `[[model]]` section.
-
-For more information about available learning models for each learning framework and their parameters, see <inv:#qualia_core.learningmodel>.
-Plugins may also load their own learning framework and bring their own learning models alongside.
-
-List of settings:
-- **`load` (boolean, optional)**: if `true`, load existing model weights, default to `false`.
-- **`train` (boolean, optional)**: if `false`, do not perform training, default to `true`.
-- **`evaluate` (boolean, optional)**: if `false`, do not perform evaluation of the model, default to `true`.
-- **`epochs` (integer)**: number of training epochs.
-- **`batch_size` (integer)**: training and inference batch size.
-- **`kind` (string)**: name of the learning model class.
-- **`params` (table)**: keyword parameters to pass to the learning model class constructor.
-
-#### `[model_template.optimizer]`
-
-Optimizer settings passed to the learning framework.
-
-For more information about available optimizer and their parameters, see the appropriate learningframework in <inv:#qualia_core.learningframework>.
-
-List of settings:
-- **`kind` (string)**: name of optimizer class to use.
-- **`params` (string)**: keyword parameters to pass to the optimizer class constructor.
-
-#### `[model_template.optimizer.scheduler]` (optional)
-
-Learning rate scheduler settings passed to the learning framework.
-
-For more information about available learning rate scheduler and their parameters, see the appropriate learningframework in <inv:#qualia_core.learningframework>.
-
-List of settings:
-- **`kind` (string)**: name of learning rate scheduler class to use.
-- **`params` (string)**: keyword parameters to pass to the learning rate scheduler class constructor.
-
-### `[[model]]`
-
-One or more learning model configuration to process successively in the `train`, `prepare_deploy` and `deploy_and_evaluate` actions.
-
-Each `[[model]]` section inherits from the common `[model_template]`, but can override any setting, including optimizer.
-
-For more information about available learning models for each learning framework and their parameters, see <inv:#qualia_core.learningmodel>.
-Plugins may also load their own learning framework and bring their own learning models alongside.
-
-List of settings:
-- **`name` (string)**: model name used to save weights and log results, must be unique.
-- **`load` (boolean, optional)**: if `true`, load existing model weights, overrides `[model_template]`.
-- **`train` (boolean, optional)**: if `false`, do not perform training, overrides `[model_template]`.
-- **`evaluate` (boolean, optional)**: if `false`, do not perform evaluation of the model, overrides `[model_template]`.
-- **`epochs` (integer, optional)**: number of training epochs, overrides `[model_template]`.
-- **`batch_size` (integer, optional)**: training and inference batch size, overrides `[model_template]`.
-- **`kind` (string, optional)**: name of the learning model class, overrides `[model_template]`.
-- **`params` (table, optional)**: keyword parameters to pass to the learning model class constructor, merged with `[model_template]` and overrides conflicting settings.
-- **`disabled` (boolean, optional)**: if `true`, skip this model, default to `false`.
+Supported dataset:
+
+- `"BrainMIX"`: Brain dataset
+    - `path`: Directory containing:
+        - `traindata48_shuffled.pickle`
+        - `valid48.pickle`
+    - Data: Signal and truth values
+    - Note: Does not support validation set
+
+- `"CIFAR10"`: CIFAR-10 image dataset
+    - `path`: Directory containing CIFAR-10 data batches:
+        - `data_batch_1` through `data_batch_5`
+        - `test_batch`
+    - `dtype`: Data type for arrays (default: 'float32')
+    - Data: 32x32x3 RGB images
+    - Note: Does not support validation set
+
+- `"CORe50"`: Core50 object recognition dataset
+    - `path`: Path to dataset directory containing:
+        - `core50_imgs.npz`
+        - `paths.pkl`
+    - `variant`: One of:
+        - `"object"`: 50 object classes
+        - `"category"`: 10 category classes
+    - `sessions`: Optional list of sessions to include in training (default: all except test sessions)
+    - Note: Uses sessions s3, s7, s10 for testing
+
+- `"EZBirds"`: Bird sound recognition dataset
+    - `path`: Directory containing:
+        - WAV files
+        - `labels.json`
+    - Data: Audio samples
+    - Note: Uses 48000 samples per record
+
+- `"ElicieHAR"`: Elicie Human Activity Recognition dataset
+    - `path`: Path to dataset directory (CSV files)
+    - `variant`: One of:
+        - `"PACK-2"`
+        - `"UCA-EHAR"`
+    - `files`: Optional list of files to include
+    - Data: Accelerometer (Ax,Ay,Az), Gyroscope (Gx,Gy,Gz), Barometer (P)
+    - Activities: STANDING, STAND_TO_SIT, SITTING, SIT_TO_STAND, WALKING, SIT_TO_LIE, LYING, LIE_TO_SIT, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, RUNNING, DRINKING, DRIVING
+    - Note: Does not support validation set
+
+- `"GSC"`: Google Speech Commands dataset
+    - `path`: Directory containing WAV files
+    - `variant`: Only `"v2"` supported
+    - `subset`: One of:
+        - `"digits"`: Only digit commands (0-9)
+        - `"no_background_noise"`: All commands except background noise
+    - `train_valid_split`: Boolean, whether to use validation set (default: False)
+    - `record_length`: Number of samples per record (default: 16000)
+    - Data: Audio samples
+    - Note: For `no_background_noise`: includes 35 commands (backward, bed, bird, cat, dog, down, etc.)
+
+- `"GTSRB"`: German Traffic Sign Recognition Benchmark
+    - `path`: Directory containing:
+        - `Final_Training/Images/`: Training images (.ppm)
+        - `Final_Test/Images/`: Test images (.ppm)
+        - `GT-final_test.csv`: Test ground truth
+    - `width`: Target image width (default: 32)
+    - `height`: Target image height (default: 32)
+    - Data: RGB images resized to specified dimensions
+    - Note: Does not support validation set
+
+- `"HD"`: Heidelberg Digits audio dataset
+    - `path`: Directory containing:
+        - `audio/`: FLAC audio files
+        - `test_filenames.txt`: List of test files (for default variant)
+    - `variant`: Optional, one of:
+        - Not specified: Uses test_filenames.txt
+        - `"by-subject"`: Split by speaker IDs
+    - `test_subjects`: List of subject IDs (required when variant="by-subject")
+    - Data: Audio samples, zero-padded to longest sample
+    - Note: Does not support validation set
+
+- `"UCI_HAR"`: UCI Human Activity Recognition dataset
+    - `path`: Directory containing UCI HAR Dataset
+    - `variant`: One of:
+        - `"features"`: Preprocessed features
+        - `"raw"`: Raw sensor data from Inertial Signals
+    - Data: 
+        - Raw: Body acceleration, gyroscope, total acceleration (x,y,z)
+        - Features: Preprocessed feature vectors
+    - Activities: WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LYING
+    - Note: Does not support validation set
+
+- `"WSMNIST"`: Written and Spoken MNIST dataset
+    - `path`: Directory containing:
+        - For spoken variant:
+            - `data_sp_train.npy`
+            - `data_sp_test.npy`
+            - `labels_train.npy`
+            - `labels_test.npy`
+        - For written variant:
+            - `data_wr_train.npy`
+            - `data_wr_test.npy`
+            - `labels_train.npy`
+            - `labels_test.npy`
+    - `variant`: One of:
+        - `"spoken"`: Spoken digit data (39x13 features)
+        - `"written"`: Written digit data (28x28x1 images)
+    - Note: Does not support validation set
+
+### 4. Model Configuration
+```toml
+[model_template]
+kind = "CNN"
+epochs = 10
+batch_size = 32
+
+[model_template.optimizer]
+kind = "Adam"
+params.lr = 0.001
+
+[model_template.optimizer.scheduler]  # Optional
+kind = "StepLR"
+params.step_size = 30
+```
+
+Supported model architectures:
+- `"CNN"`: Convolutional Neural Network
+	- Parameters:
+	    - `filters`: List of integers, number of filters for each conv layer
+	    - `kernel_sizes`: List of integers, kernel size for each conv layer
+	    - `paddings`: List of integers, padding for each conv layer
+	    - `strides`: List of integers, stride for each conv layer
+	    - `pool_sizes`: List of integers, pooling size after each conv layer (0 for no pooling)
+	    - `fc_units`: List of integers, units in fully connected layers
+	    - `batch_norm`: Boolean, whether to use batch normalization
+	    - `dropouts`: Float or list of floats, dropout rates
+	    - `prepool`: Integer, pre-pooling factor
+	    - `postpool`: Integer, post-pooling factor
+	    - `gsp`: Boolean, whether to use Global Sum Pooling
+	    - `dims`: Integer (1 or 2), dimensionality of input
+
+- `"MLP"`: Multi-Layer Perceptron
+    - Parameters:
+        - [Need to document parameters]
+
+- `"QuantizedCNN"`: Quantized Convolutional Neural Network
+    - Notes: Supports GSP (Gradual Sparseness Promotion)
+
+- `"QuantizedMLP"`: Quantized Multi-Layer Perceptron
+    - Parameters:
+        - [Need to document parameters]
+
+- `"QuantizedResNet"`: Quantized Residual Network
+    - Parameters:
+        - [Need to document parameters]
+    - Notes: PyTorch 2.x compatible
+
+- `"ResNet"`: Residual Network
+	- Parameters:
+	    - `filters`: List of integers, number of filters for each layer
+	    - `kernel_sizes`: List of integers, kernel sizes
+	    - `num_blocks`: List of integers, number of residual blocks in each layer
+	    - `strides`: List of integers, strides for each layer
+	    - `paddings`: List of integers, paddings for each layer
+	    - `prepool`: Integer, pre-pooling factor (default: 1)
+	    - `postpool`: String ('max' or 'avg'), type of final pooling
+	    - `batch_norm`: Boolean, use batch normalization (default: False)
+	    - `bn_momentum`: Float, batch norm momentum (default: 0.1)
+	    - `dims`: Integer (1 or 2), dimensionality of input
+
+- `"ResNetSampleNorm"`: ResNet with Sample Normalization
+    - Parameters:
+        - Same as ResNet, plus:
+        - `samplenorm`: String, normalization type ('minmax')
+
+- `"ResNetStride"`: ResNet with Strided Convolutions
+    - Parameters:
+        - Same as ResNet, plus:
+        - `pool_sizes`: List of integers, pooling sizes for each layer
+
+- `"TorchVisionModel"`: Models from torchvision
+	- Parameters:
+	    - `model`: String, name of torchvision model
+	    - `replace_classifier`: Boolean, whether to replace the classifier layer (default: True)
+	    - `fm_output_layer`: String, name of feature map output layer (default: 'flatten')
+	    - `freeze_feature_extractor`: Boolean, whether to freeze feature extractor (default: True)
+	    - Additional arguments passed to torchvision model
+
+
+Supported optimizers:
+- `"Adam"`
+  - `lr`: Learning rate (float)
+- `"SGD"`
+- Most of the optimizers in Pytorch
+
+Supported schedulers:
+- `"StepLR"`
+  - `step_size`: Integer, epochs between LR updates
+  - [Additional parameters need to be documented]
+- `"ReduceLROnPlateau"`
+  - [Parameters need to be documented]
+
+## Optional Sections
+
+### 1. Preprocessing
+
+```toml
+[[preprocessing]]
+kind = "DatamodelConverter"
+
+[[preprocessing]]
+kind = "Normalize"
+```
+
+Supported preprocessing:
+- `"DatamodelConverter"`
+  - [Parameters need to be documented]
+- `"Normalize"`
+  - `mean`: Float
+  - `std`: Float
+- `"Class2BinMatrix"`
+  - [Parameters need to be documented]
+
+[Additional preprocessing types need to be documented]
+
+### 2. Data Augmentation
+
+```toml
+[[data_augmentation]]
+kind = "RandomRotation"
+params.before = true    # Apply before GPU transfer
+params.after = false    # Apply after GPU transfer
+params.evaluate = false # Use during inference
+```
+
+Supported augmentations:
+- `"RandomRotation"`
+  - [Parameters need to be documented]
+
+[Additional augmentation types need to be documented]
+
+Common parameters for all augmentations:
+- `before`: Boolean, default false
+- `after`: Boolean, default true
+- `evaluate`: Boolean, default false
+
+### 3. Post-processing
+
+```toml
+[[postprocessing]]
+kind = "FuseBatchNorm"
+export = true  # Save modified weights
+```
+
+Supported post-processing:
+- `"FuseBatchNorm"`
+  - `export`: Boolean, save weights after processing
+  - [Additional parameters need to be documented]
+
+[Additional post-processing types need to be documented]
+
+### 4. Deployment
+
+```toml
+[deploy]
+target = "Linux"
+converter.kind = "QualiaCodeGen"
+converter.params = { optimize = true }
+deployer.params = { port = "/dev/ttyUSB0" }
+evaluator.params = { batch_size = 32 }
+quantize = ["float32"]
+```
+
+Supported targets:
+- `"Linux"`
+  - [Parameters need to be documented]
+- `"SparkFunEdge"`
+  - [Parameters need to be documented]
+Only QualiaCodeGen
+[Additional targets need to be documented]
+
+Supported converters:
+- `"QualiaCodeGen"`
+  - [Parameters need to be documented]
+
+[Additional converters need to be documented]
+
+### 5. Experiment Tracking
+
+```toml
+[experimenttracking]
+kind = "ClearML"
+params.project = "MyProject"
+params.task = "MyTask"
+```
+
+Supported tracking systems:
+- `"ClearML"`
+  - `project`: String
+  - `task`: String
+  - [Additional parameters need to be documented]
+
+[Additional tracking systems need to be documented]
+
+## Model Definition
+
+Define specific model variations using the `[[model]]` section:
+
+```toml
+[[model]]
+name = "cnn_small"            # Unique name required
+params.filters = [32, 64]     # Override template params
+params.kernel_sizes = [3, 3]
+disabled = false              # Optional, default false
+```
+
+Each `[[model]]` inherits from `[model_template]` and can override any setting.
+
+## Best Practices
+
+1. Always specify unique model names
+2. Use comments to document parameter choices
+3. Group related models in the same configuration file
+4. Start with example configurations
+5. Test configurations with small datasets first
+
+## Common Issues
+
+1. Missing required fields
+2. Incorrect parameter types
+3. Invalid paths or filenames
+4. Mismatched array lengths in model parameters
+
+## Getting Help
+
+1. Check error messages carefully
+2. Use example configurations as templates
+3. Verify all paths and filenames
+4. Ensure virtual environment is activated

@@ -1,88 +1,190 @@
-# Usage
-
-```{contents} Table of Contents
----
-depth: 3
----
-```
+# Using Qualia
 
 ## Overview
 
-Qualia uses configuration files in order to describe an experiment, which consists of 
-a dataset, dataset preprocessing steps, learning model, training configuration, learning model postprocessing steps and a deployment configuration.
+Qualia uses TOML configuration files to define machine learning experiments. Each experiment can include:
+- Dataset selection and preprocessing
+- Model architecture and training parameters
+- Post-processing steps
+- Deployment configuration
+If you want more information about how to create your configuration file you can find it here [[ConfigurationFile]].
+## Quick Start
 
-For more information about the configuration file, see <project:ConfigurationFile.md>.
-
-## Run Qualia
-
-Do not forget to activate your Python virtual environment first, e.g., when using PDM:
-
+1. Activate your virtual environment:
 ```bash
-$(pdm venv activate)
+# If using uv:
+source qualia_env/bin/activate  # Unix/macOS
+qualia_env\Scripts\activate     # Windows
+
+# If using PDM:
+$(pdm venv activate qualia_env)
 ```
 
-Qualia is launched from the command line with the `qualia` command:
-
+2. Basic command structure:
 ```bash
 qualia <config.toml> <action> [config_params]
 ```
 
-`config.toml` is the path to the configuration file for this experiment.
+## Workflow Steps
 
-`action` is one of the action described below.
+Qualia's workflow consists of four main actions that are typically run in sequence:
 
-`config_params` are optional arguments to override settings from the configuration file.
-They are specified with the format `--<key1>.<key...>.<keyn>=<value>`.
-`key` can be a string to index a dictionary or an integer to index a list. `value` is evaluated as a Python expression.
-For example, to override the `name` setting in the `[bench]` section: `--bench.name=\"Test\"`;
-and to override the `disabled` parameter of the first `[[model]]`: `--model.0.disabled=True`.
+### 1. Preprocess Data
+```bash
+qualia config.toml preprocess_data
+```
+- Loads dataset specified in `[dataset]` section
+- Applies preprocessing steps from `[[preprocessing]]` sections
+- Exports processed data to `out/data/<dataset_name>` as compressed NumPy arrays
+- Handles both 2D data (`[N, H, W, C]`) and 1D data (`[N, S, C]`)
 
-It it recommended to avoid adding any `config_params` as the configuration file itself should reflect all the settings for an experiment.
+Example output structure:
+```
+out/
+└── data/
+    └── UCI_HAR/
+        ├── train_data.npz
+        └── test_data.npz
+```
 
-Currently, Qualia offers 4 actions that are designed to be run in sequence and described thereafter.
+### 2. Train Models
+```bash
+qualia config.toml train
+```
+- Trains models defined in `[[model]]` sections
+- Uses settings from `[model_template]` (can be overridden)
+- Saves:
+  - Model weights in `out/learningmodel/`
+  - Training results in `log/<bench_name>/learningmodel/`
+- Applies post-processing steps if specified
 
-### `preprocess_data`
+Example output structure:
+```
+out/
+└── learningmodel/
+    └── uci-har_cnn_simple.pth
 
-`preprocess_data` will load the dataset specified in the `[dataset]` section of the configuration file,
-then apply the preprocessing steps specified in the `[[preprocessing]]` sections of the configuration file, from first to last.
+log/
+└── UCI-HAR_CNN_example/
+    └── learningmodel/
+        ├── metrics.json
+        └── training_log.txt
+```
 
-The processed dataset is then exported as [Zstandard](https://github.com/facebook/zstd)-compressed NumPy arrays for better interoperability.
+### 3. Prepare for Deployment
+```bash
+qualia config.toml prepare_deploy
+```
+- Converts models for target platform
+- Uses settings from `[deploy]` section
+- Creates deployment files in:
+  - `out/<converter>/`: Converted model files
+  - `out/<deploy>/`: Platform-specific files
 
-The exported data can be found in the `out/data/<dataset_name>` folder.
+Example output structure:
+```
+out/
+├── codegen/
+│   └── uci-har_cnn_simple/
+│       ├── model.c
+│       └── model.h
+└── deploy/
+    └── uci-har_cnn_simple/
+        └── firmware.bin
+```
 
-Note that the data is assumed to be in `channels_last` format, with `[N, H, W, C]` order for 2D data or `[N, S, C]` order for 1D data.
+### 4. Deploy and Evaluate
+```bash
+qualia config.toml deploy_and_evaluate
+```
+- Deploys prepared files to target system
+- Runs evaluation
+- Saves results in `log/<bench_name>/evaluate/`
 
-### `train`
+Example output structure:
+```
+log/
+└── UCI-HAR_CNN_example/
+    └── evaluate/
+        ├── accuracy.json
+        └── inference_times.csv
+```
 
-`train` starts the training process for each model specified in `[[model]]` sections of the configuration file, from first to last.
-Note that each `[[model]]` section inherits the settings from the `[model_template]` section but they can be overriden.
+## Configuration Parameters
 
-The training is performed with the learning framework specified in the `[learningframework]` section
+You can override configuration settings via command line arguments:
 
-The trained model weights are saved in the `out/learningmodel` folder with the model name in the file name.
-The format of the file depends on the chosen learning framework.
-The results are saved in the `log/<bench_name>/learningmodel` folder.
+```bash
+qualia config.toml train --bench.name="Test" --model.0.disabled=True
+```
 
-After each model training is done, the model postprocessing steps specified in `[[postprocessing]]` sections of the configuration file are applied.
+Parameter format:
+- `--<section>.<key>=<value>`
+- For nested settings: `--<section>.<subsection>.<key>=<value>`
+- For array elements: `--<section>.<index>.<key>=<value>`
 
-Postprocessing steps may change the model name and re-export the weights if their `export` setting is set to `true`.
+Examples:
+```bash
+# Change experiment name
+--bench.name="MyExperiment"
 
-### `prepare_deploy`
+# Modify learning rate
+--model_template.optimizer.params.lr=0.001
 
-`prepare_deploy` prepares the files to be deployed on the target configured in the `[deploy]` section of the configuration file,
-for each model specified in `[[model]]` sections, from first to last.
+# Disable specific model
+--model.0.disabled=True
 
-First, a converter module is called in order to convert the trained learning model to a format suitable for the target.
-For example, this may perform code generation using Qualia-CodeGen.
-The conversion will export files in the `out/<converter>` folder.
+# Change batch size for second model
+--model.1.batch_size=64
+```
 
-Then, this converted model is prepared for deployment.
-For example, this may perform compilation of the generated source code to produce a firmware image.
-The prepared files are saved in the `out/<deploy>` folder.
+Note: It's recommended to make changes in the configuration file rather than using command-line overrides to maintain reproducibility.
 
-### `deploy_and_evaluate`
+## Best Practices
 
-`deploy_and_evaluate` deploys the files prepared with `prepare_deploy` onto the target configured in the `[deploy]` section of the configuration,
-then runs the on-target evaluation. This is performed for each model specified in `[[model]]` sections, from first to last.
+1. **Configuration Files**
+   - Keep one configuration file per experiment
+   - Use descriptive names for experiments and models
+   - Comment important parameter choices
 
-The results are saved in the `log/<bench_name>/evaluate` folder.
+2. **Directory Structure**
+   - Organize datasets in `data/`
+   - Keep configuration files in a dedicated directory
+   - Use version control for configurations
+
+3. **Workflow**
+   - Run actions in sequence
+   - Verify outputs after each step
+   - Monitor training progress in logs
+
+4. **Deployment**
+   - Test deployment on small datasets first
+   - Keep track of model versions
+   - Document target-specific requirements
+
+## Common Issues
+
+1. **Data Format**
+   - Ensure correct channel order (`channels_last`)
+   - Verify data dimensions match model expectations
+   - Check preprocessing output shapes
+
+2. **Training**
+   - Monitor GPU memory usage
+   - Watch for learning rate issues
+   - Verify model convergence
+
+3. **Deployment**
+   - Check target compatibility
+   - Verify memory constraints
+   - Test deployment environment
+
+## Getting Help
+
+If you encounter issues:
+1. Check the logs in `log/<bench_name>/`
+2. Verify configuration file syntax
+3. Ensure all dependencies are installed
+4. Review target platform requirements
+
+For more detailed information about configuration options, see the Configuration File documentation.
