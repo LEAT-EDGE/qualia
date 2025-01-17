@@ -465,14 +465,14 @@ Each postprocessing module can include:
 	- C code: `out/qualia_codegen/<model_name>_q<type>/`
 - Export Support: ✅ (Saves C code implementation)
 
-### `"RemoveKerasSoftmax"`: Softmax Removal
+`"RemoveKerasSoftmax"`: Softmax Removal
 - Removes final Softmax layer from Keras models
 - Output Files when `export=true`:
 	- Model weights: `out/learningmodel/<model_name>_no_softmax`
 - Export Support: ✅ (Saves model without Softmax)
 - Notes: Only works if last layer is Activation(softmax)
 
-### `"Torch2Keras"`: PyTorch to Keras Conversion
+`"Torch2Keras"`: PyTorch to Keras Conversion
 - Converts PyTorch models to Keras format
 - Parameters:
 	- `mapping`: Path to TOML file defining layer mapping
@@ -592,39 +592,180 @@ Notes:
 
 ```toml
 [experimenttracking]
-kind = "ClearML"
-params.project = "MyProject"
-params.task = "MyTask"
+kind = "ClearML"              # Tracking system to use
+params.project = "MyProject"  # Project name
 ```
 
-Supported tracking systems:
-- `"ClearML"`
-  - `project`: String
-  - `task`: String
-  - [Additional parameters need to be documented]
+**PyTorch Tracking**
+- `"ClearML"`: Integration with ClearML tracking system
+- `"Neptune"`: Integration with Neptune.ai platform
 
-[Additional tracking systems need to be documented]
+**Keras Tracking**
+- `"Neptune"`: Integration with Neptune.ai platform
 
-## Model Definition
-Define specific model variations using the `[[model]]` section:
+**Example Configurations**
+```toml
+# Using ClearML with PyTorch
+[experimenttracking]
+kind = "ClearML"
+params.project = "MyProject"
+params.task = "Training"
+
+# Using Neptune with Keras or PyTorch
+[experimenttracking]
+kind = "Neptune"
+params.project = "MyProject"
+params.experiment = "Training"
+```
+
+## 6. Model Definition
+Models in Qualia are defined through two components:
+1. A template (`[model_template]`) containing common settings
+2. Specific variations (`[[model]]`) that can override template settings
+
+### Model Template
+The template defines default settings for all models:
+
+```toml
+[model_template]
+kind = "CNN"                # Model architecture type
+epochs = 10                 # Training epochs
+batch_size = 32            # Batch size
+
+# Model-specific parameters
+params.batch_norm = true
+params.filters = [32, 64]
+params.kernel_sizes = [3, 3]
+
+# Optimizer settings
+[model_template.optimizer]
+kind = "Adam"
+params.lr = 0.001
+
+# Optional scheduler
+[model_template.optimizer.scheduler]
+kind = "StepLR"
+params.step_size = 30
+```
+
+Common settings:
+- `kind`: Model architecture (see "Supported Model Architectures")
+- `epochs`: Number of training epochs
+- `batch_size`: Training and inference batch size
+- `params`: Architecture-specific parameters
+- `optimizer`: Training optimizer configuration
+- `scheduler`: Learning rate scheduler (optional)
+
+### Model Variants
+Each model variant is defined in its own `[[model]]` section:
 
 ```toml
 [[model]]
-name = "cnn_small"            # Unique name required
-params.filters = [32, 64]     # Override template params
-params.kernel_sizes = [3, 3]
-disabled = false              # Optional, default false
+name = "cnn_small"            # Unique model name
+params.filters = [32, 64]     # Override specific params
+disabled = false              # Optional, skip this model
+
+[[model]]
+name = "cnn_large"
+params.filters = [64, 128]
+params.fc_units = [256]       # Add new params
+
+[[model]]
+name = "cnn_custom"
+kind = "ResNet"              # Override architecture
+params = { ... }             # Complete param override
 ```
 
-Each `[[model]]` inherits from `[model_template]` and can override any setting.
+Settings:
+- `name`: Unique identifier (required)
+- `disabled`: Skip this model (default: false)
+- Any template setting can be overridden:
+	- `kind`: Different architecture
+	- `epochs`, `batch_size`: Different training settings
+	- `params`: Partial or complete parameter override 
+	- `optimizer`, `scheduler`: Different training config
+
+### Common Model Settings
+
+#### Training Control
+```toml
+[model_template]
+load = false          # Load existing weights
+train = true         # Perform training
+evaluate = true      # Run evaluation
+```
+
+#### Data Parameters
+```toml
+[model_template]
+input_shape = [28, 28, 1]   # Input dimensions
+output_shape = [10]         # Output dimensions
+```
+
+#### Optimizer Options
+```toml
+[model_template.optimizer]
+kind = "SGD"
+params.lr = 0.01
+params.momentum = 0.9
+params.weight_decay = 0.0001
+```
+
+#### Scheduler Options
+```toml
+[model_template.optimizer.scheduler]
+kind = "StepLR"
+params.step_size = 30
+params.gamma = 0.1
+```
+
+### Example Complete Configuration
+
+```toml
+# Template for all models
+[model_template]
+kind = "CNN"
+epochs = 100
+batch_size = 32
+params.batch_norm = true
+params.filters = [32, 64]
+params.kernel_sizes = [3, 3]
+params.pool_sizes = [2, 2]
+
+[model_template.optimizer]
+kind = "Adam"
+params.lr = 0.001
+
+# Small model variant
+[[model]]
+name = "cnn_small"
+# Uses template settings
+
+# Medium model with custom filters
+[[model]]
+name = "cnn_medium"
+params.filters = [64, 128]
+
+# Large model with different architecture
+[[model]]
+name = "cnn_large"
+params.filters = [128, 256]
+params.fc_units = [512]
+epochs = 150  # More epochs
+
+# Disabled variant
+[[model]]
+name = "experimental"
+params.filters = [256, 512]
+disabled = true
+```
 
 ## Best Practices
 
 1. Always specify unique model names
 2. Use comments to document parameter choices
-3. Group related models in the same configuration file
-4. Start with example configurations
-5. Test configurations with small datasets first
+3. Start with example configurations
+4. Test configurations with small datasets first
 
 ## Common Issues
 
