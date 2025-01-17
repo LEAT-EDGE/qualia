@@ -310,15 +310,20 @@ kind = "Normalize"
 ```
 
 Supported preprocessing:
-- `"DatamodelConverter"`
-  - [Parameters need to be documented]
-- `"Normalize"`
-  - `mean`: Float
-  - `std`: Float
+- `"BandPassFilter"`
 - `"Class2BinMatrix"`
-  - [Parameters need to be documented]
-
-[Additional preprocessing types need to be documented]
+- `"CopySet"`
+- `"DatamodelConverter"`
+- `"DatasetSplitter"`
+- `"DatasetSplitterBySubjects"`
+- `"MFCC"`
+- `"Normalize"`
+- `"Reshape2DTo1D"`
+- `"RemoveActivity"`
+- `"RemoveSensor"`
+- `"VisualizeActivities"`
+- `"VisualizeWindows"`
+- `"Window"`
 
 ### 2. Data Augmentation
 
@@ -330,16 +335,37 @@ params.after = false    # Apply after GPU transfer
 params.evaluate = false # Use during inference
 ```
 
-Supported augmentations:
-- `"RandomRotation"`
-  - [Parameters need to be documented]
+Signal Processing :
 
-[Additional augmentation types need to be documented]
+- `"Amplitude"`: Amplitude modification
+- `"CMSISMFCC"`: MFCC transformation
+- `"GaussianNoise"`: Add Gaussian noise
+- `"MFCC"`: Mel-frequency cepstral coefficients
+- `"Normalize"`: Normalize data using torchvision transforms
+- `"TimeShifting"`: Time-based shifting
+- `"TimeWarping"`: Time warping transformation
 
-Common parameters for all augmentations:
-- `before`: Boolean, default false
-- `after`: Boolean, default true
-- `evaluate`: Boolean, default false
+Image Processing :
+
+- `"AutoAugment"`: Automatic augmentation
+- `"Crop"`: Cropping transformation
+- `"CutoutID"`: Cutout augmentation
+- `"HorizontalFlip"`: Horizontal flip
+- `"ResizedCrop"`: Resize and crop
+- `"Rotation"`: Rotation transformation
+- `"Rotation2D"`: 2D rotation
+- `"TorchVisionModelTransforms"`: torchvision model transforms
+
+Data Type Conversion :
+
+- `"IntToFloat32"`: Convert integers to float32
+- `"Mixup"`: Mixup augmentation
+
+Parameters for each augmentation:
+
+- `before`: Boolean, apply before GPU transfer (default: False)
+- `after`: Boolean, apply after GPU transfer (default: True)
+- `evaluate`: Boolean, use during inference (default: False)
 
 ### 3. Post-processing
 
@@ -349,38 +375,218 @@ kind = "FuseBatchNorm"
 export = true  # Save modified weights
 ```
 
-Supported post-processing:
-- `"FuseBatchNorm"`
-  - `export`: Boolean, save weights after processing
-  - [Additional parameters need to be documented]
+Each postprocessing module can include:
+- `export`: Boolean, whether to save model weights after processing (default: False)
+ 
+**Model Analysis**
+`"Distribution"`: Parameter Distribution Analysis
+- Analyzes distribution of model parameters
+- Parameters:
+	- `method`: Analysis method:
+		- `"layer_wise"`: Analyze per layer (default)
+		- `"network_wise"`: Analyze whole network
+  - `bins`: Number of histogram bins (default: 10)
+  - `min`: Minimum value for histogram (default: -5.0)
+  - `max`: Maximum value for histogram (default: 5.0)
+  - `output_layer`: Save layer information in pickle files (default: True)
+  - `output_pdf`: Generate PDF with distributions (default: False)
+- Output Files:
+	- Distribution files: `out/distribution/<network_name>/`
+- Export Support: ❌ (Analysis only, no model weight modification)
 
-[Additional post-processing types need to be documented]
+`"VisualizeFeatureMaps"`: Feature Map Visualization 
+- Visualizes feature maps of model layers
+- Parameters:
+	- `create_pdf`: Generate PDF visualization (default: True)
+	- `save_feature_maps`: Save feature maps (default: True)
+	- `compress_feature_maps`: Use compression (default: True)
+	- `data_range`: Optional list of [start, end] indices
+- Output Files:
+	- Feature maps and PDFs: `out/feature_maps/`
+- Export Support: ❌ (Visualization only, no model weight modification)
+
+**Model Optimization**
+`"FuseBatchNorm"`: BatchNorm Fusion
+- Fuses BatchNorm layers into preceding convolutions
+- Parameters:
+	- `evaluate`: Evaluate model after fusion (default: True)
+- Output Files when `export=true`:
+	- Model weights: `out/learningmodel/<model_name>_fused`
+- Export Support: ✅ (Saves modified model with fused layers)
+- Notes: Only for PyTorch models in eval mode
+
+ `"QuantizationAwareTraining"`: QAT Training
+- Performs quantization-aware training
+- Parameters:
+	- `epochs`: Training epochs (default: 1)
+	- `batch_size`: Batch size (default: 32)
+	- `model`: Model configuration containing:
+	- `params.quant_params`:
+		- `bits`: Quantization bit width
+		- `force_q`: Optional forced quantization
+		- `LSQ`: Use LSQ quantization (default: False)
+  - `optimizer`: Optional optimizer configuration
+  - `evaluate_before`: Evaluate before QAT (default: True)
+- Output Files when `export=true`:
+	- Model weights: `out/learningmodel/<model_name>_q<bits>_force_q<value>_e<epochs>_LSQ<bool>`
+	- Activation ranges: `out/learningmodel/<model_name>_activations_range.txt`
+- Export Support: ✅ (Saves quantized model and ranges)
+
+ `"QuantizationAwareTrainingFX"`: FX-based QAT
+- Extension of QuantizationAwareTraining using torch.fx
+- Same parameters as QuantizationAwareTraining
+- Same output files and export behavior
+- Export Support: ✅ (Saves quantized model and ranges)
+
+**Model Conversion**
+`"Keras2TFLite"`: Keras to TFLite Conversion
+- Converts Keras models to TFLite format
+- Parameters:
+	- `quantize`: Target format:
+		- `"float32"`: No quantization
+		- `"int8"`: 8-bit integer quantization
+		- `"int16"`: 16-bit integer quantization
+  - `new_converter`: Use new TFLite converter (default: False)
+- Output Files when `export=true`:
+	- TFLite model: `out/<target>/<model_name>.tflite`
+- Export Support: ✅ (Saves TFLite model)
+
+ `"QualiaCodeGen"`: C Code Generation
+- Generates optimized C code implementation
+- Parameters:
+	- `quantize`: Target format:
+		- `"float32"`: 32-bit floating point
+		- `"int8"`: 8-bit integer
+		- `"int16"`: 16-bit integer
+	- `long_width`: Width for long integers
+	- `outdir`: Output directory (default: "out/qualia_codegen")
+	- `metrics`: List of metrics to convert
+- Output Files when `export=true`:
+	- C code: `out/qualia_codegen/<model_name>_q<type>/`
+- Export Support: ✅ (Saves C code implementation)
+
+### `"RemoveKerasSoftmax"`: Softmax Removal
+- Removes final Softmax layer from Keras models
+- Output Files when `export=true`:
+	- Model weights: `out/learningmodel/<model_name>_no_softmax`
+- Export Support: ✅ (Saves model without Softmax)
+- Notes: Only works if last layer is Activation(softmax)
+
+### `"Torch2Keras"`: PyTorch to Keras Conversion
+- Converts PyTorch models to Keras format
+- Parameters:
+	- `mapping`: Path to TOML file defining layer mapping
+- Output Files when `export=true`:
+	- Keras model: `out/learningmodel/<model_name>_keras`
+	- Activation ranges: `out/learningmodel/<model_name>_activations_range.h5.txt`
+- Export Support: ✅ (Saves Keras model)
+
+**Example Configuration:**
+
+```toml
+# Fuse batch normalization and save weights
+[[postprocessing]]
+kind = "FuseBatchNorm"
+evaluate = true
+export = true  # Saves fused model
+
+# Quantization-aware training
+[[postprocessing]]
+kind = "QuantizationAwareTraining"
+epochs = 5
+model.params.quant_params = { bits = 8 }
+evaluate_before = true
+export = true  # Saves quantized model
+
+# Generate and save C code
+[[postprocessing]]
+kind = "QualiaCodeGen"
+quantize = "int8"
+metrics = ["accuracy"]
+export = true  # Saves generated code
+```
 
 ### 4. Deployment
 
 ```toml
 [deploy]
-target = "Linux"
-converter.kind = "QualiaCodeGen"
-converter.params = { optimize = true }
-deployer.params = { port = "/dev/ttyUSB0" }
-evaluator.params = { batch_size = 32 }
-quantize = ["float32"]
+target = "Linux"              # Target platform
+converter.kind = "QualiaCodeGen"  # Converter to use
+quantize = ["float32"]       # Quantization options
 ```
 
-Supported targets:
+ **`"QualiaCodeGen"`**
+Converts models to C code.
+Supported Targets:
+- `"NucleoH7S3L8"` (STM32H7 board, up to 740MHz)
+- `"NucleoL452REP"` (STM32L4 board)
+- `"NucleoU575ZIQ"` (STM32U5 board)
+- `"SparkFunEdge"` (SparkFun Edge board)
+- `"LonganNano"` (Sipeed Longan Nano board)
 - `"Linux"`
-  - [Parameters need to be documented]
-- `"SparkFunEdge"`
-  - [Parameters need to be documented]
-Only QualiaCodeGen
-[Additional targets need to be documented]
 
-Supported converters:
-- `"QualiaCodeGen"`
-  - [Parameters need to be documented]
 
-[Additional converters need to be documented]
+**`"Keras2TFLite"`**
+Converts Keras models to TFLite format.
+Supported Targets:
+- `"Linux"` only
+
+
+**`"TFLite"`**
+For pre-converted TFLite models.
+Supported Targets:
+- `"Linux"` only
+
+
+**`"stm32cubeai"`**
+Uses STM32Cube.AI to deploy models on STM32 boards.
+Supported Targets:
+- `"NucleoH7S3L8"` (STM32H7 board)
+- `"NucleoL452REP"` (STM32L4 board)
+- `"STM32CubeAI"` (Generic STM32 with Cube.AI)
+
+
+**`"tflitemicro"`**
+TensorFlow Lite for Microcontrollers deployment.
+Supported Targets:
+- `"SparkFunEdge"` (SparkFun Edge board)
+
+**Example Configurations**
+```toml
+# Using QualiaCodeGen for STM32
+[deploy]
+target = "NucleoH7S3L8"
+converter.kind = "QualiaCodeGen"
+quantize = ["int8"]
+
+# Using Keras2TFLite
+[deploy]
+target = "Linux"
+converter.kind = "Keras2TFLite"
+quantize = ["int8"]
+```
+
+**Quantize Parameter**
+In the deployment configuration, `quantize` specifies what data types to use:
+
+```toml
+[deploy]
+quantize = ["float32"]     # Single option
+# or
+quantize = ["int8", "int16"]  # Multiple options
+```
+
+Available quantization types:
+- `"float32"`: 32-bit floating point
+- `"float16"`: 16-bit floating point (TFLite only)
+- `"float8"`: 8-bit floating point (TFLite only)
+- `"int16"`: 16-bit integer
+- `"int8"`: 8-bit integer
+
+Notes:
+- Must be provided as a list, even for single option
+- Order matters for some converters
+- Some options may not be supported by all converters (e.g., float16 and float8 are TFLite-specific)
 
 ### 5. Experiment Tracking
 
@@ -400,7 +606,6 @@ Supported tracking systems:
 [Additional tracking systems need to be documented]
 
 ## Model Definition
-
 Define specific model variations using the `[[model]]` section:
 
 ```toml
