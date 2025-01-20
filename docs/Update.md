@@ -6,77 +6,130 @@ depth: 3
 ---
 ```
 
-## User setup
+## User Setup
 
-### Existing Python environment with Pip
+### Option 1: Using uv (Recommended for Performance)
 
-Pip will not handle the update of all your Python packages. It will only allow updating the specified Qualia's component and installing new dependencies when required.
-
-Run, specifying all the Qualia's components your are using and their optional depencency groups in brackets:
-```{parsed-literal}
-pip install -U qualia-core[pytorch]{{qualia_extra_index}}
+Activate your environment:
+```bash
+source qualia_env/bin/activate  # Unix/macOS
+qualia_env\Scripts\activate     # Windows
 ```
 
-#### Dedicated in-project environment with PDM
+Update Qualia and its dependencies:
+```bash
+# Basic update with PyTorch support
+uv pip install -U qualia-core[pytorch]
 
-Move into the base Qualia directory:
-```
-cd qualia-master
-```
-
-Activate the environment with:
-```
-$(pdm venv activate)
+# With additional dependencies
+uv pip install -U "qualia-core[pytorch,visualize,test]"
 ```
 
-Then run:
+### Option 2: Using PDM (Recommended for Dependency Management)
+
+Activate your environment:
+```bash
+$(pdm venv activate qualia_env)
 ```
+
+Update Qualia and all dependencies:
+```bash
+# Update all packages in the environment
 pdm update --update-all
+
+# Update specific package with dependencies
+pdm update qualia-core
 ```
 
-## Developer setup
+### Option 3: Using pip
 
-### Update Qualia's components
+Pip will only update the specified Qualia components and install new dependencies when required.
 
-Updating Qualia's components in the developer setup is done by fetching and merging the new changes from the git repositories.
+```bash
+# Basic update with PyTorch support
+pip install -U qualia-core[pytorch]
 
-If working off of the `master` branch, a `git pull` in the component's repository should be enough.
-
-Repeat this step for any additional Qualia component you are using.
-
-### Update third-party dependencies
-
-You may need to update third-party dependencies in case a breaking change happened.
-
-#### Dedicated in-project environment with PDM
-
-Move into the base qualia directory:
+# With additional dependencies
+pip install -U "qualia-core[pytorch,visualize,test]"
 ```
+
+## Developer Setup
+
+### Update Qualia's Components
+
+For developer setups, first update the source code:
+
+1. Update the git repositories:
+```bash
 cd qualia
+git pull
 ```
 
-Activate the environment with:
+Repeat for any additional Qualia components you're using.
+
+### Update Third-party Dependencies
+
+#### Option 1: Using uv
+
+```bash
+cd qualia
+source qualia_env/bin/activate
+
+# Update development installation
+uv pip install -U -e ./qualia-core[pytorch,clearml] --dev
+
+# For additional components
+cd qualia-core
+uv pip install -U -e .[pytorch,clearml] --dev
 ```
+
+#### Option 2: Using PDM
+
+```bash
+cd qualia
 $(pdm venv activate)
-```
 
-Then run:
-```
+# Update all dependencies
 pdm update --update-all
+
+# Update specific component and its dependencies
+pdm update qualia-core
 ```
 
-#### Existing environment with Pip
+#### Option 3: Using pip
 
-Pip will not handle the update of all your Python packages. It will only allow installing new dependencies when required.
-
-Move into the Qualia's component directory, e.g., for Qualia-Core:
-```
+Move into the Qualia component directory:
+```bash
 cd qualia-core
 ```
 
-Then run, specifying optional depencency groups in brackets:
-```
-pip install -e .[pytorch]
+Update the development installation:
+```bash
+pip install -U -e .[pytorch]
 ```
 
-Repeat this step for any additional Qualia component you are using, in order from the root of the dependency graph (see <project:User/Components.md>).
+Repeat for additional components, following the dependency graph order (see <project:User/Components.md>).
+
+## Available Optional Dependencies
+
+When updating, you can include additional features by adding them in brackets:
+
+- Machine Learning: `[pytorch]`, `[tensorflow]`
+- Development: `[codegen]`, `[tests]`, `[lint]`, `[typecheck]`, `[docs]`
+- Visualization: `[visualize]`, `[clearml]`
+- Datasets: `[gtsrb]`, `[gsc]`, `[pytorch3drotation]`, `[dataaugmentation_image]`
+- Deployment: `[deployment-sparkfunedge]`, `[evaluation-host-tflite]`, `[evaluation-target-qualia]`
+
+The list above may not be up to date. You can verify in [[Installation]].
+
+Remember to include all required dependencies when updating. For example:
+```bash
+# Using uv
+uv pip install -U "qualia-core[pytorch,visualize,clearml]"
+
+# Using PDM
+pdm update "qualia-core[pytorch,visualize,clearml]"
+
+# Using pip
+pip install -U "qualia-core[pytorch,visualize,clearml]"
+```

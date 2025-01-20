@@ -1,4 +1,4 @@
-# Python package structure
+# Python Package Structure
 
 ```{contents} Table of Contents
 ---
@@ -6,139 +6,148 @@ depth: 3
 ---
 ```
 
-Sub-packages are required to contain a `__init__.py` file because namespace packages are not always supported properly
-(in particular, it will not work with the `importlib.resources` module of Python 3.9).
-
-## Qualia
-
-Qualia-Core and Qualia-Plugin top-level package should follow this sub-packages and modules organization.
-
-A plugin may contain any of these sub-packages or modules, depending on the features it provides.
-
-For more information, see <inv:#qualia_core>
-
-### `assets/`
-
-Any non-Python files that should be included when installing the package.
-
-Note that `assets/` is a Python subpackage itself so it needs to contain a `__init__.py` file as well (even empty).
-
-### `dataaugmentation/`
-
-Contains the data augmentation modules, referenced in the `[[data_augmentation]]` sections of the <project:/User/ConfigurationFile.md>.
-
-### `datamodel/`
-
-Contains the data structures used to store the dataset after loading.
-
-### `dataset/`
-
-Contains the dataset loader modules, referenced in the `[dataset]` section of the <project:/User/ConfigurationFile.md>.
-
-### `deployment/`
-
-Contains the target deployment modules used during `prepare_deploy` and `deploy_and_evaluate` actions, configured
-in the `[deploy]` sections of the <project:/User/ConfigurationFile.md>
-and suggested by the model converter module.
-
-### `evaluation/`
-
-Contains the on-target evaluation modules used during `deploy_and_evaluate` action, configured
-in the `[deploy]` sections of the <project:/User/ConfigurationFile.md>
-and suggested by the target deployment module.
-
-### `experimenttracking/`
-
-Contains the dataset loader modules, referenced in the `[experimenttracking]` section of the <project:/User/ConfigurationFile.md>.
-
-### `learningframework/`
-
-Contains the learning framework modules, referenced in the `[learningframework]` section of the <project:/User/ConfigurationFile.md>.
-
-### `learningmodel/`
-
-Contains the learning model modules, under a subdirectory for each learning framework,
-referenced in the `[model_template]` and/or `[[model]]` sections of the <project:/User/ConfigurationFile.md>.
-
-### `postprocessing/`
-
-Contains the model postprocessing modules, referenced in the `[[postprocessing]]` sections of the <project:/User/ConfigurationFile.md>.
-
-Also contains the model converter modules, referenced in the `[deploy]` sections of the <project:/User/ConfigurationFile.md>.
-
-### `preprocessing/`
-
-Contains the data preprocessing modules, referenced in the `[[preprocessing]]` sections of the <project:/User/ConfigurationFile.md>
-and used during the `preprocess_data` action.
-
-### `utils/`
-
-Any extra utility modules that do not fit in another sub-package.
-
-### `main.py`
-
-Mandatory if a command-line interface is provided.
-
-The entry point for the command-line interface that is referenced in `pyproject.toml`.
-
-### `py.typed`
-
-Mandatory except if type hints are not available yet.
-
-An empty file to signify that this package provides type hints when imported by other packages.
-
-For more information, see <project:TypeChecking.md>
-
-### `typing.py`
-
-Contains any common type hint definitions, e.g., the custom `TYPE_CHECKING` constant.
-
-For more information, see <project:TypeChecking.md>
-
-## Qualia-CodeGen
-
-Qualia-CodeGen-Core and Qualia-CodeGen-Plugin top-level package should follow this sub-packages and modules organization.
-
-A plugin may contain any of these sub-packages or modules, depending on the features it provides.
-
-For more information, see <inv:#qualia_codegen_core>
-
-### `assets/`
-
-Non-Python files that should be included when installing the package, in particular contains the template files for code generation.
-
-Note that `assets` is a Python subpackage itself so it needs to contain a `__init__.py` file (even empty).
-
-### `examples/`
-
-Contains the project files for deployment on a specific target.
-
-Note that `examples` is a Python subpackage itself so it needs to contain a `__init__.py` file (even empty).
-
-### `graph/`
-
-Contains the internal graph representation data structures as well as the graph conversion modules (PyTorch, Keras…).
-
-### `graph/layers/`
-
-Contains the internal graph representation layers definitions.
-
-### `main.py`
-
-Mandatory if a command-line interface is provided.
-
-The entry point for the command-line interface that is referenced in `pyproject.toml`.
-
-### `py.typed`
-
-Mandatory except if type hints are not available yet.
-
-An empty file to signify that this package provides type hints when imported by other packages.
-
-For more information, see <project:TypeChecking.md>
-
-### `typing.py`
-
-Contains any common type hint definitions, e.g., the custom `TYPE_CHECKING` constant.
-
-For more information, see <project:TypeChecking.md>
+## Basic Structure
+
+A typical Qualia package (core or plugin) has the following structure:
+
+```
+qualia-package/
+├── conf/                    # Configuration files
+│   ├── dataset1/           # Organized by dataset
+│   │   └── model_conf.toml
+│   └── dataset2/
+│       └── model_conf.toml
+├── docs/                    # Documentation
+│   ├── conf.py
+│   ├── index.rst
+│   └── Makefile
+├── src/
+│   └── qualia_package_name/
+│       ├── assets/         # Non-Python files
+│       ├── dataaugmentation/  # Data augmentation modules
+│       │   └── pytorch/
+│       ├── datamodel/      # Dataset structures
+│       ├── dataset/        # Dataset loaders
+│       ├── deployment/     # Target deployment modules
+│       │   ├── keras/
+│       │   ├── qualia_codegen/
+│       │   └── tflite/
+│       ├── evaluation/     # On-target evaluation
+│       │   ├── host/
+│       │   └── target/
+│       ├── experimenttracking/ # Experiment tracking modules
+│       ├── learningframework/  # Learning framework modules
+│       ├── learningmodel/     # Model definitions
+│       │   ├── keras/
+│       │   └── pytorch/
+│       │       └── layers/
+│       ├── postprocessing/    # Model post-processing
+│       ├── preprocessing/     # Data preprocessing
+│       ├── utils/            # Utility functions
+│       ├── __init__.py
+│       ├── main.py          # CLI entry point
+│       ├── py.typed         # Type hints marker
+│       └── typing.py        # Type definitions
+├── tests/                   # Test files
+│   └── functional/
+│       ├── end_to_end/
+│       └── training/
+├── LICENSE
+├── pyproject.toml          # Project metadata and dependencies
+└── README.md
+```
+
+## Directory Descriptions
+
+### Top-level Directories
+
+- `conf/`: Contains TOML configuration files organized by dataset and experiment
+- `docs/`: Documentation files and build configuration
+- `src/`: Source code directory containing the main package
+- `tests/`: Test files organized by type (functional, unit, etc.)
+
+### Source Package Structure (`src/qualia_package_name/`)
+
+#### Core Modules
+
+1. **`assets/`**
+   - Non-Python files needed for package installation
+   - Must contain `__init__.py` (can be empty)
+   - Template files, project files, etc.
+
+2. **`datamodel/`**
+   - Data structures for storing dataset information
+   - Common data representations
+   - Dataset-specific models
+
+3. **`dataset/`**
+   - Dataset loader modules
+   - Referenced in `[dataset]` configuration sections
+   - Handles data import and initial formatting
+
+4. **`learningframework/`**
+   - Framework-specific implementations (PyTorch, Keras, etc.)
+   - Referenced in `[learningframework]` configuration
+   - Handles training loop and model interaction
+
+5. **`learningmodel/`**
+   - Model architecture definitions
+   - Organized by framework (pytorch/, keras/)
+   - Custom layers and components
+   - Referenced in `[model_template]` and `[[model]]` sections
+
+#### Processing Modules
+
+6. **`preprocessing/`**
+   - Data preprocessing modules
+   - Used during `preprocess_data` action
+   - Referenced in `[[preprocessing]]` sections
+
+7. **`dataaugmentation/`**
+   - Data augmentation implementations
+   - Referenced in `[[data_augmentation]]` sections
+   - Framework-specific augmentation methods
+
+8. **`postprocessing/`**
+   - Model postprocessing modules
+   - Model converter modules
+   - Referenced in `[[postprocessing]]` and `[deploy]` sections
+
+#### Deployment Modules
+
+9. **`deployment/`**
+   - Target deployment modules
+   - Used during `prepare_deploy` and `deploy_and_evaluate`
+   - Framework-specific deployment handlers
+   - Referenced in `[deploy]` sections
+
+10. **`evaluation/`**
+    - On-target evaluation modules
+    - Used during `deploy_and_evaluate`
+    - Host and target-specific evaluations
+    - Referenced in `[deploy]` sections
+
+11. **`experimenttracking/`**
+    - Experiment logging and tracking
+    - Referenced in `[experimenttracking]` section
+    - Framework-specific tracking implementations
+
+#### Utility Files
+
+12. **`utils/`**
+    - Common utility functions
+    - File handling, logging, process management
+    - Helper functions used across modules
+
+13. **Required Files**
+    - `main.py`: CLI entry point (if CLI is provided)
+    - `py.typed`: Empty file marking package as type-hinted
+    - `typing.py`: Common type definitions
+    - `__init__.py`: Required in all directories for proper importing
+
+## Notes
+
+- All directories must contain `__init__.py` files (Python 3.9 compatibility)
+- Plugins may implement any subset of these directories based on features
+- Directory structure matches configuration file sections
+- Type hints are mandatory unless explicitly marked as unavailable

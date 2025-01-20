@@ -194,6 +194,7 @@ Available features:
 - `lint`: Code quality tools
 - `docs`: Documentation tools
 - `tensorflow`: TensorFlow support
+- And more to discover in [[Installation]] !
 
 ## Best Practices
 
