@@ -1,0 +1,53 @@
+# Use Python 3.11 slim as the base image
+FROM python:3.11-slim
+
+###################
+# System Setup
+###################
+
+# Set working directory for all subsequent commands
+WORKDIR /app
+
+# Install system dependencies and SSH
+RUN apt-get update && apt-get install -y \
+        git \
+        build-essential \
+        curl \
+        cmake \
+        ninja-build \
+        gcc \
+        openssh-server \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configure SSH
+RUN mkdir /var/run/sshd && \
+    echo 'root:root' | chpasswd && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+###################
+# Python Setup
+###################
+
+# Install Python packages directly
+RUN pip install --no-cache-dir --pre -U pip && \
+    pip install --no-cache-dir --pre -U "qualia-core[codegen,tensorflow,pytorch,gtsrb,gsc,dataaugmentation_image,clearml,visualize,deployment-sparkfunedge,evaluation-host-tflite,evaluation-target-qualia,tests,lint,typecheck,docs]" \
+        --extra-index-url=https://naixtech.unice.fr/devpi/penovac/qualia-nightly/+simple \
+        --trusted-host naixtech.unice.fr
+
+###################
+# Environment Setup
+###################
+
+# Configure Python environment
+ENV PYTHONPATH=/app/src
+ENV CUBLAS_WORKSPACE_CONFIG=:4096:8
+ENV PYTHONHASHSEED=2
+
+# Expose SSH port
+EXPOSE 22
+
+# Start SSH service
+CMD ["/usr/sbin/sshd", "-D"]
