@@ -85,20 +85,20 @@ You can mount a volume with Docker or transfer the files using SCP.
 #### Option 1: Mount Local Directory
 
 ```bash
-# Run the container and mounts your current directory to `/app` in the container.
-docker run -d --gpus all -p 2222:22 -v .:/app qualia:cuda
+# Run the container and mounts your current directory to `/workspace` in the container.
+docker run -d --gpus all -p 2222:22 -v .:/workspace qualia:cuda
 ```
 
 #### Option 2: Transfer Files via SCP
 
 ```bash
 # Copy files TO the container
-scp -P 2222 -r data/ root@localhost:/app/                  # Copy directory
-scp -P 2222 CNN_float32_train.toml root@localhost:/app/    # Copy file
+scp -P 2222 -r data/ root@localhost:/workspace/                  # Copy directory
+scp -P 2222 CNN_float32_train.toml root@localhost:/workspace/    # Copy file
 
 # Copy files FROM the container
-scp -P 2222 -r root@localhost:/app/out/ ./                 # Copy output directory
-scp -P 2222 root@localhost:/app/out/results.txt ./         # Copy specific file
+scp -P 2222 -r root@localhost:/workspace/out/ ./                 # Copy output directory
+scp -P 2222 root@localhost:/workspace/out/results.txt ./         # Copy specific file
 ```
 
 
