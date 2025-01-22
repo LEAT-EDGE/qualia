@@ -82,27 +82,30 @@ For modifying Qualia's source code, follow these steps using either uv or PDM:
 
 ```bash
 # Clone repositories
-git clone https://your-gitlab-server/qualia.git
-cd qualia
+git clone https://github.com/LEAT-EDGE/qualia-core.git
+cd qualia-core
 
 # Create development environment
 uv venv qualia_env
 source qualia_env/bin/activate
 
 # Install dependencies
-uv pip install -e ./qualia-core[pytorch,clearml] --dev
+uv pip install -e .
 
 # For additional components
-git clone git@your-gitlab-server:qualia-core.git
-uv pip install -e ./qualia-core[pytorch,clearml] --dev
+uv pip install -e .[pytorch, clearml, AllTheComponentAvailable]
+
+# For all available components
+uv pip install -e .[codegen,tensorflow,pytorch,gtsrb,gsc,dataaugmentation_image,clearml,visualize,deployment-sparkfunedge,evaluation-host-tflite,evaluation-target-qualia,tests,lint,typecheck,docs]
+
 ```
 
 ### Using PDM for Development
 
 ```bash
 # Clone repositories
-git clone https://your-gitlab-server/qualia.git
-cd qualia
+git clone https://github.com/LEAT-EDGE/qualia-core.git
+cd qualia-core
 
 # Create development environment
 pdm venv create -n qualia_env
