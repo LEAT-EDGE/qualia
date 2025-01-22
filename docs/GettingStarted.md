@@ -70,7 +70,7 @@ pip install -U qualia-core[pytorch]
 
 ### Option 4: Using docker
 
-For more explanation see in [[Docker]].
+For more explanation see in [[UsingDocker]].
 
 ```bash
 # Pull Docker image
