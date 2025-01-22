@@ -16,7 +16,7 @@ Before you begin, ensure you have:
 
 ## Installation Options
 
-We provide three installation methods, listed from most recommended to simplest:
+We provide four installation methods, listed from most recommended to simplest:
 
 ### Option 1: Using uv (Recommended for Best Performance)
 
@@ -68,6 +68,21 @@ qualia_env\Scripts\activate     # On Windows
 pip install -U qualia-core[pytorch]
 ```
 
+### Option 4: Using docker
+
+For more explanation see in [[Docker]].
+
+```bash
+# Pull Docker image
+docker pull gcariou/leat-edge-qualia:cuda
+
+# Mount current directory with "workspace"
+# Curent directory usully contain config and dataset
+docker run -d --gpus all -p 2222:22 -v .:/workspace qualia:cuda
+
+# Connect to the container
+ssh -p 2222 root@localhost  # password: root
+```
 ## Tutorial: Your First Qualia Project
 
 Let's create a practical example using the UCI Human Activity Recognition (HAR) dataset.

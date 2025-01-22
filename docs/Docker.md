@@ -64,22 +64,6 @@ sudo docker build -f qualia-opensource-cuda -t qualia:cuda .
 sudo docker run -d --gpus all -p 2222:22 qualia:cuda
 ```
 
-## Using the Container
-
-### SSH Access
-
-```bash
-# Connect to the container
-ssh -p 2222 root@localhost  # password: root
-
-# If you get a host key error, reset the SSH fingerprint using either:
-# Method 1 (using $HOME):
-ssh-keygen -f "$HOME/.ssh/known_hosts" -R "[localhost]:2222"
-# Method 2 (using explicit path):
-ssh-keygen -f '/home/$USER/.ssh/known_hosts' -R '[localhost]:2222'
-# Both commands do the same thing, just using different ways to reference your home directory
-```
-
 ### Using Custom Configs and Datasets
 You can mount a volume with Docker or transfer the files using SCP.
 #### Option 1: Mount Local Directory
@@ -101,6 +85,21 @@ scp -P 2222 -r root@localhost:/workspace/out/ ./                 # Copy output d
 scp -P 2222 root@localhost:/workspace/out/results.txt ./         # Copy specific file
 ```
 
+## Using the Container
+
+### SSH Access
+
+```bash
+# Connect to the container
+ssh -p 2222 root@localhost  # password: root
+
+# If you get a host key error, reset the SSH fingerprint using either:
+# Method 1 (using $HOME):
+ssh-keygen -f "$HOME/.ssh/known_hosts" -R "[localhost]:2222"
+# Method 2 (using explicit path):
+ssh-keygen -f '/home/$USER/.ssh/known_hosts' -R '[localhost]:2222'
+# Both commands do the same thing, just using different ways to reference your home directory
+```
 
 ### Container Management
 
