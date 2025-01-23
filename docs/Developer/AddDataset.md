@@ -1,13 +1,14 @@
 # Adding New Datasets to Qualia
 
-## Base Structure 
+## Base Structure
 
-The dataset implementation should follow this basic structure:
+Start by creating a new dataset class that inherits from `RawDataset`. Here's a complete example showing the essential structure:
 
 ```python
 from __future__ import annotations
 import sys
 import logging
+import numpy as np
 from pathlib import Path
 from qualia_core.datamodel import RawDataModel
 from qualia_core.datamodel.RawDataModel import RawData, RawDataSets
@@ -23,180 +24,95 @@ class MyNewDataset(RawDataset):
     def __init__(self, path: str) -> None:
         super().__init__()
         self.__path = Path(path)
-        # Remove validation if not needed
+        # Remove validation set if not needed
         self.sets.remove('valid')
-```
-
-## Implementation Patterns
-
-Let's look at two common patterns found in Qualia's datasets:
-
-### Pattern 1: Simple Dataset (Like BrainMIX)
-For datasets with straightforward loading from files:
-
-```python
-class SimpleDataset(RawDataset):
-    def __init__(self, path: str) -> None:
-        super().__init__()
-        self.__path = Path(path)
-        self.sets.remove('valid')  # If no validation set
 
     @override
     def __call__(self) -> RawDataModel:
-        # Load data files
-        with (self.__path/'train.pickle').open('rb') as fd:
-            train_data = pickle.load(fd)
-        with (self.__path/'test.pickle').open('rb') as fd:
-            test_data = pickle.load(fd)
+        # Load your data files here
+        # Example with numpy arrays:
+        train_x = np.load(self.__path / 'train_x.npy')  # Shape: [N, S, C] for 1D or [N, H, W, C] for 2D
+        train_y = np.load(self.__path / 'train_y.npy')  # Shape: [N] for class numbers
+        
+        test_x = np.load(self.__path / 'test_x.npy')
+        test_y = np.load(self.__path / 'test_y.npy')
 
-        # Process data
-        train_x = train_data['x']
-        train_y = train_data['y']
-        test_x = test_data['x']
-        test_y = test_data['y']
-
-        # Create RawData objects
+        # Create RawData objects for each set
         train = RawData(train_x, train_y)
         test = RawData(test_x, test_y)
 
+        # Return the complete model
         return RawDataModel(
             sets=RawDataSets(train=train, test=test),
             name=self.name
         )
 ```
 
-### Pattern 2: Complex Dataset (Like CIFAR10)
-For datasets requiring more processing:
+## Core Data Structures
+
+### RawData
+- Represents a single dataset partition
+- Contains:
+  - `x`: Input data as numpy.ndarray
+  - `y`: Ground truth labels as numpy.ndarray
+- Provides methods for importing/exporting in compressed format (useful for saving/loading preprocessed datasets)
+
+### RawDataSets
+- Groups dataset partitions together
+- Contains:
+  - `train`: Training set (RawData)
+  - `test`: Test set (RawData)
+  - `valid`: Validation set (RawData, optional)
+
+### RawDataModel
+- Top-level container returned by dataset's `__call__` method
+- Contains:
+  - `sets`: RawDataSets object
+  - `name`: Dataset name
+
+## Expected Data Dimensions
+
+### 1D Data (e.g., time series)
+- Input shape: `[N, S, C]`
+  - N: Number of samples
+  - S: Time steps
+  - C: Channels
+
+### 2D Data (e.g., images)
+- Input shape: `[N, H, W, C]`
+  - N: Number of samples
+  - H: Height
+  - W: Width
+  - C: Channels
+
+### Ground Truth (Labels)
+- Classification:
+  - Option 1: Class numbers as integers `[N]` (use preprocessing.Class2BinMatrix later for one-hot encoding)
+  - Option 2: One-hot encoded matrix `[N, num_classes]`
+
+## Configuration and Parameters
+
+Parameters can be declared in the constructor and set via configuration file:
 
 ```python
-@dataclass
-class DatasetFile:
-    data: numpy.typing.NDArray[np.uint8]
-    labels: list[int]
-    # Add other needed fields
-
-class ComplexDataset(RawDataset):
-    def __init__(self, path: str = '', dtype: str = 'float32') -> None:
-        super().__init__()
-        self.__path = Path(path)
-        self.__dtype = dtype
-        self.sets.remove('valid')
-
-    def __load_file(self, file: Path) -> DatasetFile:
-        """Helper method to load data files"""
-        with file.open('rb') as fo:
-            raw = pickle.load(fo, encoding='bytes')
-            # Process raw data as needed
-            return DatasetFile(**processed_data)
-
-    def __load_train(self, path: Path) -> RawData:
-        """Separate method for loading training data"""
-        start = time.time()
-        
-        # Load and process training data
-        data = self.__load_file(path/'train_file')
-        
-        # Process into correct format
-        x = data.data.reshape((-1, height, width, channels))
-        y = np.array(data.labels)
-        
-        logger.info('Train data loaded in %s s', time.time() - start)
-        return RawData(x, y)
-
-    def __load_test(self, path: Path) -> RawData:
-        """Separate method for loading test data"""
-        start = time.time()
-        
-        # Load and process test data
-        data = self.__load_file(path/'test_file')
-        
-        # Process into correct format
-        x = data.data.reshape((-1, height, width, channels))
-        y = np.array(data.labels)
-        
-        logger.info('Test data loaded in %s s', time.time() - start)
-        return RawData(x, y)
-
-    @override
-    def __call__(self) -> RawDataModel:
-        return RawDataModel(
-            sets=RawDataSets(
-                train=self.__load_train(self.__path),
-                test=self.__load_test(self.__path)
-            ),
-            name=self.name
-        )
+def __init__(self, path: str = '', dtype: str = 'float32') -> None:
+    super().__init__()
+    self.__path = Path(path)
+    self.__dtype = dtype
 ```
 
-## Key Implementation Points
-
-1. **Type Hints and Imports**
-```python
-from __future__ import annotations  # Always include
-import sys
-from typing import override  # Use typing_extensions for Python < 3.12
-```
-
-2. **Logging**
-```python
-import logging
-logger = logging.getLogger(__name__)
-# Use throughout code:
-logger.info('Loading data...')
-logger.debug('Processing batch %d', batch_num)
-```
-
-3. **Path Handling**
-```python
-from pathlib import Path
-self.__path = Path(path)  # Convert string paths to Path objects
-```
-
-4. **Performance Monitoring**
-```python
-start = time.time()
-# ... load data ...
-logger.info('Operation completed in %s s', time.time() - start)
-```
-
-5. **Data Processing Helper Methods**
-```python
-def __process_data(self, raw_data: np.ndarray) -> np.ndarray:
-    """Create helper methods for data processing steps"""
-    # Reshape, normalize, etc.
-    return processed_data
-```
-
-## Best Practices from Existing Implementations
-
-1. **Use Private Methods**
-   - Prefix internal methods with double underscore
-   - Keep implementation details encapsulated
-
-2. **Handle Data Types**
-   - Allow dtype specification when relevant
-   - Convert data to correct type explicitly
-
-3. **Error Handling**
-   - Check file existence
-   - Validate data shapes and types
-   - Log errors appropriately
-
-4. **Documentation**
-   - Comment non-obvious processing steps
-   - Log important operations and timing
-   - Use proper type hints
-
-## Example Configuration
-
-Add configuration example in `conf/dataset_name/`:
-
+Configuration file (`conf/dataset_name/config.toml`):
 ```toml
 [dataset]
 name = "MyNewDataset"
-path = "path/to/data"
-dtype = "float32"  # If supported
+path = "path/to/data"  # accessed as params.path
+dtype = "float32"      # accessed as params.dtype
+```
 
-[preprocessing]
-# Add any needed preprocessing steps
+## Final Steps
+
+After creating your dataset class, import it in `__init__.py`:
+
+```python
+from .my_new_dataset import MyNewDataset
 ```
