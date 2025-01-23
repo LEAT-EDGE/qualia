@@ -16,7 +16,7 @@ They are generally organized with a subdirectory for each dataset but this is no
 
 Additionally, the `conf/tests/` directory is used to store functional test configurations.
 
-For more information, see [[ConfigurationFile]]
+For more information, see [ConfigurationFile](../UserGuide/ConfigurationFile)
 
 ## `docs/`
 

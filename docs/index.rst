@@ -12,54 +12,49 @@ Welcome to Qualia's documentation!
 
 Qualia is an end-to-end framework for training, quantizing, and deploying deep neural networks on embedded devices.
 
-Getting Started
-====================
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :caption: Getting Started
 
-   GettingStarted
-   Installation
-   UsingDocker
+   GettingStarted/GettingStarted
+   GettingStarted/Installation
+   GettingStarted/UsingDocker
 
-Package Management
-====================
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :caption: Package Management
 
-   UsingPDM
-   UsingUV
-   Update
+   PackageManagement/UsingPDM
+   PackageManagement/UsingUV
+   PackageManagement/Update
 
-User Guide
-====================
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :caption: User Guide
 
-   Usage
-   ConfigurationFile
-   Components
-   MigrationPreviousVersions
+   UserGuide/Usage
+   UserGuide/ConfigurationFile
+   UserGuide/Components
+   UserGuide/MigrationPreviousVersions
 
-Developer Guide
-====================
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :caption: Developer Guide
 
-   Developer/RepositoryStructure
-   Developer/PackageStructure
-   Developer/Plugins
-   Developer/AddDataset
-   Developer/Documentation
-   Developer/CodeStyleLinter
-   Developer/TypeChecking
-   Developer/Tests
+   DeveloperGuide/RepositoryStructure
+   DeveloperGuide/PackageStructure
+   DeveloperGuide/Plugins
+   DeveloperGuide/AddDataset
+   DeveloperGuide/Documentation
+   DeveloperGuide/CodeStyleLinter
+   DeveloperGuide/TypeChecking
+   DeveloperGuide/Tests
 
-Project Information
-====================
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :caption: Project Information
 
-   Changelog
+   ProjectInformation/Changelog
 
 Indices and tables
 ====================

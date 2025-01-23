@@ -7,7 +7,7 @@ Qualia uses TOML configuration files to define machine learning experiments. Eac
 - Model architecture and training parameters
 - Post-processing steps
 - Deployment configuration
-If you want more information about how to create your configuration file you can find it here [[ConfigurationFile]].
+If you want more information about how to create your configuration file you can find it here [ConfigurationFile](ConfigurationFile).
 ## Quick Start
 
 1. Activate your virtual environment:

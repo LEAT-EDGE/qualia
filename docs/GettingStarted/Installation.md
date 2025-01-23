@@ -150,7 +150,7 @@ Available options:
 - Deployment: `[deployment-sparkfunedge]`, `[evaluation-host-tflite]`, `[evaluation-target-qualia]`
 
 ## Qualia components
-If you want to take a look at all the available components here is the link [Optional Components](Components).
+If you want to take a look at all the available components here is the link [Optional Components](../UserGuide/Components).
 
 ## Common Issues and Solutions
 

@@ -2,10 +2,10 @@
 ## Introduction
 This guide will help you get up and running with Qualia, a modular system for machine learning experimentation and deployment.
 We will show you a very simple installation and exemple. If you want more detail about the different part we advice you to seek the answers in the documentation :
-- [[Installation]]
-- [[Usage]]
-- [[ConfigurationFile]]
-- [[Components]]
+- [Installation](Installation)
+- [Usage](../UserGuide/Usage)
+- [ConfigurationFile](../UserGuide/ConfigurationFile)
+- [Components](../UserGuide/Components)
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ Before you begin, ensure you have:
 
 ## Installation Options
 
-Please use one of the installation procedure listed in [[Installation]] or [[UsingDocker]].
+Please use one of the installation procedure listed in {doc}`Installation` or {doc}`UsingDocker`.
 
 ## Tutorial: Your First Qualia Project
 
