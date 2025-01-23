@@ -54,8 +54,7 @@ plugins = ["qualia_plugin_snn"]  # Optional
 Available settings:
 - `name`: String, experiment name for logging
 - `seed`: Integer, random seed for reproducibility
-- `first_run`: Integer, starting iteration (allow in case of crash to not start from the beginning)
-- `last_run`: Integer, ending iteration
+- `first_run/last_run`: Integer, to run multiple training sessions of the same models for statistical purposes
 - `plugins`: Optional list of plugin names
 	- `"qualia_plugin_snn"`
 	- `"qualia_plugin_som"`
@@ -79,19 +78,25 @@ Supported frameworks:
 kind = "UCI_HAR"
 params.variant = "raw"
 params.path = "data/UCI HAR Dataset/"
+```
 
+```toml
 # CIFAR-10 example
 [dataset]
 kind = "CIFAR10"
 params.path = "data/cifar10/"
 params.dtype = "float32"
+```
 
+```toml
 # CORe50 example
 [dataset]
 kind = "CORe50"
 params.path = "data/core50/"
 params.variant = "category"
+```
 
+```toml
 # GSC example
 [dataset]
 kind = "GSC"
@@ -99,13 +104,17 @@ params.path = "data/speech_commands/"
 params.variant = "v2"
 params.subset = "digits"
 params.train_valid_split = true
+```
 
+```toml
 # WSMNIST example
 [dataset]
 kind = "WSMNIST"
 params.path = "data/wsmnist/"
 params.variant = "spoken"
+```
 
+```toml
 # BrainMIX example
 [dataset]
 kind = "BrainMIX"
@@ -114,7 +123,7 @@ params.path = "data/brainmix/"
 
 Supported dataset:
 
-- `"BrainMIX"`: Brain dataset
+- `"BrainMIX"`: Brain dataset ([more information](https://arxiv.org/abs/2405.02308))
     - `path`: Directory containing:
         - `traindata48_shuffled.pickle`
         - `valid48.pickle`
@@ -146,7 +155,7 @@ Supported dataset:
     - Data: Audio samples
     - Note: Uses 48000 samples per record
 
-- `"ElicieHAR"`: Elicie Human Activity Recognition dataset
+- `"ElicieHAR"`: Elicie Human Activity Recognition dataset ([link 1](https://zenodo.org/records/5659336) and [link 2](https://www.mdpi.com/2076-3417/12/8/3849))
     - `path`: Path to dataset directory (CSV files)
     - `variant`: One of:
         - `"PACK-2"`
@@ -217,6 +226,8 @@ Supported dataset:
     - Note: Does not support validation set
 
 ### 4. Model Configuration
+The model configuration consists of a model template section and at least one model variant section. While the model template (`[model_template]`) defines default settings that can be shared across models, at least one model variant (`[[model]]`) must be specified for Qualia to function. The available model architectures depend on your chosen learning framework and can be found in either the learningmodel/pytorch or learningmodel/keras subdirectories.
+Parameter lists must be completely specified and full for all layers to be generated correctly.
 ```toml
 [model_template]
 kind = "CNN"
@@ -252,30 +263,21 @@ Supported model architectures:
     - Parameters:
         - [Need to document parameters]
 
-- `"QuantizedCNN"`: Quantized Convolutional Neural Network
-    - Notes: Supports GSP (Gradual Sparseness Promotion)
-
-- `"QuantizedMLP"`: Quantized Multi-Layer Perceptron
-    - Parameters:
-        - [Need to document parameters]
-
-- `"QuantizedResNet"`: Quantized Residual Network
-    - Parameters:
-        - [Need to document parameters]
-    - Notes: PyTorch 2.x compatible
-
 - `"ResNet"`: Residual Network
 	- Parameters:
-	    - `filters`: List of integers, number of filters for each layer
-	    - `kernel_sizes`: List of integers, kernel sizes
-	    - `num_blocks`: List of integers, number of residual blocks in each layer
-	    - `strides`: List of integers, strides for each layer
-	    - `paddings`: List of integers, paddings for each layer
-	    - `prepool`: Integer, pre-pooling factor (default: 1)
-	    - `postpool`: String ('max' or 'avg'), type of final pooling
-	    - `batch_norm`: Boolean, use batch normalization (default: False)
-	    - `bn_momentum`: Float, batch norm momentum (default: 0.1)
-	    - `dims`: Integer (1 or 2), dimensionality of input
+		- `filters`: List of integers specifying number of filters. First element applies to initial layer, remaining elements apply to residual blocks
+		- `kernel_sizes`: List of integers specifying kernel sizes
+		- `num_blocks`: List of integers where each element specifies how many times to repeat a block configuration using the corresponding parameters from filters/kernel_sizes/pool_sizes/paddings lists
+		- `pool_sizes`: List of integers specifying pooling between blocks
+		- `strides`: List of integers specifying strides for each layer
+		- `paddings`: List of integers specifying paddings for each layer
+		- `prepool`: Integer specifying pre-pooling factor (default: 1)
+		- `postpool`: String ('max' or 'avg') specifying type of final pooling
+		- `batch_norm`: Boolean specifying use of batch normalization (default: False)
+		- `bn_momentum`: Float specifying batch norm momentum (default: 0.1)
+		- `dims`: Integer (1 or 2) specifying dimensionality of input
+
+Note: In the standard ResNet, pool_sizes controls downsampling between blocks. This behavior is corrected in the ResNetStride variant which separates stride and pooling controls.
 
 - `"ResNetSampleNorm"`: ResNet with Sample Normalization
     - Parameters:
@@ -285,7 +287,8 @@ Supported model architectures:
 - `"ResNetStride"`: ResNet with Strided Convolutions
     - Parameters:
         - Same as ResNet, plus:
-        - `pool_sizes`: List of integers, pooling sizes for each layer
+		- `pool_sizes`: List of integers specifying pooling sizes for each layer
+		- `strides`: List of integers specifying actual stride values
 
 - `"TorchVisionModel"`: Models from torchvision
 	- Parameters:
@@ -296,22 +299,18 @@ Supported model architectures:
 	    - Additional arguments passed to torchvision model
 
 
-Supported optimizers:
-- `"Adam"`
-  - `lr`: Learning rate (float)
-- `"SGD"`
-- Most of the optimizers in Pytorch
+Supported optimizers: 
+- PyTorch: [https://pytorch.org/docs/stable/optim.html](https://pytorch.org/docs/stable/optim.html)
+- Keras: [https://keras.io/api/optimizers/](https://keras.io/api/optimizers/)
 
-Supported schedulers:
-- `"StepLR"`
-  - `step_size`: Integer, epochs between LR updates
-  - [Additional parameters need to be documented]
-- `"ReduceLROnPlateau"`
-  - [Parameters need to be documented]
+Supported schedulers: 
+- PyTorch: [https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate](https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate)
+- Keras: [https://keras.io/api/optimizers/learning_rate_schedules/](https://keras.io/api/optimizers/learning_rate_schedules/)
 
 ## Optional Sections
 
 ### 1. Preprocessing
+They are executed sequentially in the order they appear in the configuration file.
 
 ```toml
 [[preprocessing]]
@@ -338,6 +337,7 @@ Supported preprocessing:
 - `"Window"`
 
 ### 2. Data Augmentation
+Data augmentations are executed sequentially in the order they appear in the configuration file, with one important distinction: all augmentations with `params.before = true` are executed first, followed by all augmentations with `params.after = true`.
 
 ```toml
 [[data_augmentation]]
@@ -350,27 +350,29 @@ params.evaluate = false # Use during inference
 Signal Processing :
 
 - `"Amplitude"`: Amplitude modification
-- `"CMSISMFCC"`: MFCC transformation
+- `"CMSISMFCC"`: MFCC transformation using ARM CMSIS implementation
 - `"GaussianNoise"`: Add Gaussian noise
-- `"MFCC"`: Mel-frequency cepstral coefficients
+- `"MFCC"`: MFCC transformation using torchaudio implementation
 - `"Normalize"`: Normalize data using torchvision transforms
 - `"TimeShifting"`: Time-based shifting
 - `"TimeWarping"`: Time warping transformation
 
 Image Processing :
 
-- `"AutoAugment"`: Automatic augmentation
+- `"AutoAugment"`: Automatic augmentation (using torchvision module)
 - `"Crop"`: Cropping transformation
-- `"CutoutID"`: Cutout augmentation
+- `"Cutout1D"`: Cutout augmentation
 - `"HorizontalFlip"`: Horizontal flip
 - `"ResizedCrop"`: Resize and crop
-- `"Rotation"`: Rotation transformation
+- `"Rotation"`: 3D rotation transformation
 - `"Rotation2D"`: 2D rotation
 - `"TorchVisionModelTransforms"`: torchvision model transforms
 
 Data Type Conversion :
 
 - `"IntToFloat32"`: Convert integers to float32
+
+Something else :
 - `"Mixup"`: Mixup augmentation
 
 Parameters for each augmentation:
@@ -380,7 +382,7 @@ Parameters for each augmentation:
 - `evaluate`: Boolean, use during inference (default: False)
 
 ### 3. Post-processing
-
+They are executed sequentially in the order they appear in the configuration file.
 ```toml
 [[postprocessing]]
 kind = "FuseBatchNorm"
@@ -412,7 +414,7 @@ Each postprocessing module can include:
 	- `create_pdf`: Generate PDF visualization (default: True)
 	- `save_feature_maps`: Save feature maps (default: True)
 	- `compress_feature_maps`: Use compression (default: True)
-	- `data_range`: Optional list of [start, end] indices
+	- `data_range`: Optional list of [start, end] indices for selecting test dataset samples to generate average feature maps
 - Output Files:
 	- Feature maps and PDFs: `out/feature_maps/`
 - Export Support: ❌ (Visualization only, no model weight modification)
@@ -427,21 +429,22 @@ Each postprocessing module can include:
 - Export Support: ✅ (Saves modified model with fused layers)
 - Notes: Only for PyTorch models in eval mode
 
- `"QuantizationAwareTraining"`: QAT Training
-- Performs quantization-aware training
+`"QuantizationAwareTraining"`: QAT Training
+- Performs quantization-aware training or post-training quantization
 - Parameters:
-	- `epochs`: Training epochs (default: 1)
-	- `batch_size`: Batch size (default: 32)
-	- `model`: Model configuration containing:
-	- `params.quant_params`:
-		- `bits`: Quantization bit width
-		- `force_q`: Optional forced quantization
-		- `LSQ`: Use LSQ quantization (default: False)
-  - `optimizer`: Optional optimizer configuration
-  - `evaluate_before`: Evaluate before QAT (default: True)
+    - `epochs`: Training epochs (default: 1)
+    - Note: If epochs=0, performs Post-Training Quantization instead of Quantization-Aware Training
+    - `batch_size`: Batch size (default: 32)
+    - `model`: Model configuration containing:
+    - `params.quant_params`:
+        - `bits`: Quantization bit width
+        - `force_q`: Optional forced quantization
+        - `LSQ`: Use LSQ quantization (default: False)
+    - `optimizer`: Optional optimizer configuration
+    - `evaluate_before`: Evaluate before QAT (default: True)
 - Output Files when `export=true`:
-	- Model weights: `out/learningmodel/<model_name>_q<bits>_force_q<value>_e<epochs>_LSQ<bool>`
-	- Activation ranges: `out/learningmodel/<model_name>_activations_range.txt`
+    - Model weights: `out/learningmodel/<model_name>_q<bits>_force_q<value>_e<epochs>_LSQ<bool>`
+    - Activation ranges: `out/learningmodel/<model_name>_activations_range.txt`
 - Export Support: ✅ (Saves quantized model and ranges)
 
  `"QuantizationAwareTrainingFX"`: FX-based QAT
@@ -451,32 +454,6 @@ Each postprocessing module can include:
 - Export Support: ✅ (Saves quantized model and ranges)
 
 **Model Conversion**
-`"Keras2TFLite"`: Keras to TFLite Conversion
-- Converts Keras models to TFLite format
-- Parameters:
-	- `quantize`: Target format:
-		- `"float32"`: No quantization
-		- `"int8"`: 8-bit integer quantization
-		- `"int16"`: 16-bit integer quantization
-  - `new_converter`: Use new TFLite converter (default: False)
-- Output Files when `export=true`:
-	- TFLite model: `out/<target>/<model_name>.tflite`
-- Export Support: ✅ (Saves TFLite model)
-
- `"QualiaCodeGen"`: C Code Generation
-- Generates optimized C code implementation
-- Parameters:
-	- `quantize`: Target format:
-		- `"float32"`: 32-bit floating point
-		- `"int8"`: 8-bit integer
-		- `"int16"`: 16-bit integer
-	- `long_width`: Width for long integers
-	- `outdir`: Output directory (default: "out/qualia_codegen")
-	- `metrics`: List of metrics to convert
-- Output Files when `export=true`:
-	- C code: `out/qualia_codegen/<model_name>_q<type>/`
-- Export Support: ✅ (Saves C code implementation)
-
 `"RemoveKerasSoftmax"`: Softmax Removal
 - Removes final Softmax layer from Keras models
 - Output Files when `export=true`:
@@ -499,23 +476,16 @@ Each postprocessing module can include:
 # Fuse batch normalization and save weights
 [[postprocessing]]
 kind = "FuseBatchNorm"
-evaluate = true
-export = true  # Saves fused model
+evaluate = true  # Evaluate model after fusion
+export = true    # Save fused model weights
 
 # Quantization-aware training
 [[postprocessing]]
 kind = "QuantizationAwareTraining"
-epochs = 5
-model.params.quant_params = { bits = 8 }
-evaluate_before = true
-export = true  # Saves quantized model
-
-# Generate and save C code
-[[postprocessing]]
-kind = "QualiaCodeGen"
-quantize = "int8"
-metrics = ["accuracy"]
-export = true  # Saves generated code
+epochs = 5       # Number of QAT epochs
+model.params.quant_params = { bits = 8 }  # 8-bit quantization
+evaluate_before = true  # Evaluate model before QAT
+export = true    # Save quantized model
 ```
 
 ### 4. Deployment
@@ -523,8 +493,8 @@ export = true  # Saves generated code
 ```toml
 [deploy]
 target = "Linux"              # Target platform
-converter.kind = "QualiaCodeGen"  # Converter to use
-quantize = ["float32"]       # Quantization options
+converter.kind = "QualiaCodeGen" # Use Qualia-CodeGen converter 
+quantize = ["int8"] # Quantization format
 ```
 
  **`"QualiaCodeGen"`**
@@ -535,7 +505,7 @@ Supported Targets:
 - `"NucleoU575ZIQ"` (STM32U5 board)
 - `"SparkFunEdge"` (SparkFun Edge board)
 - `"LonganNano"` (Sipeed Longan Nano board)
-- `"Linux"`
+- `"Linux"` (for desktop/server deployment)
 
 
 **`"Keras2TFLite"`**
@@ -547,7 +517,7 @@ Supported Targets:
 **`"TFLite"`**
 For pre-converted TFLite models.
 Supported Targets:
-- `"Linux"` only
+- `"Linux"` only, not usable implicitly
 
 
 **`"stm32cubeai"`**
@@ -583,10 +553,17 @@ In the deployment configuration, `quantize` specifies what data types to use:
 
 ```toml
 [deploy]
-quantize = ["float32"]     # Single option
+quantize = ["float32"]  # Use 32-bit floating point
 # or
-quantize = ["int8", "int16"]  # Multiple options
+quantize = ["int8"]     # Use 8-bit integers
+# or
+quantize = ["int16"]    # Use 16-bit integers
 ```
+
+Important notes about quantization:
+- The `quantize` parameter must be provided as a single-element list
+- When using integer quantization (int8/int16), you must configure Quantization-Aware Training in the postprocessing section
+- Different quantization formats require separate configuration files
 
 Available quantization types:
 - `"float32"`: 32-bit floating point
@@ -630,12 +607,12 @@ params.project = "MyProject"
 params.experiment = "Training"
 ```
 
-## 6. Model Definition
+### 6. Model Definition
 Models in Qualia are defined through two components:
 1. A template (`[model_template]`) containing common settings
 2. Specific variations (`[[model]]`) that can override template settings
 
-### Model Template
+#### Model Template
 The template defines default settings for all models:
 
 ```toml
@@ -668,7 +645,7 @@ Common settings:
 - `optimizer`: Training optimizer configuration
 - `scheduler`: Learning rate scheduler (optional)
 
-### Model Variants
+#### Model Variants
 Each model variant is defined in its own `[[model]]` section:
 
 ```toml
@@ -778,17 +755,3 @@ disabled = true
 2. Use comments to document parameter choices
 3. Start with example configurations
 4. Test configurations with small datasets first
-
-## Common Issues
-
-1. Missing required fields
-2. Incorrect parameter types
-3. Invalid paths or filenames
-4. Mismatched array lengths in model parameters
-
-## Getting Help
-
-1. Check error messages carefully
-2. Use example configurations as templates
-3. Verify all paths and filenames
-4. Ensure virtual environment is activated
