@@ -1,10 +1,4 @@
 # Qualia Configuration Guide
-
-```{contents} Table of Contents
----
-depth: 3
----
-```
 ## Overview
 
 Qualia uses TOML configuration files to define machine learning experiments. This guide explains each configuration section and its available options.

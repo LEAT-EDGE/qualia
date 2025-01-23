@@ -1,45 +1,68 @@
 .. Qualia documentation master file, created by
-   sphinx-quickstart on Tue Sep 19 16:35:43 2023.
+   sphinx-quickstart
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 .. _index:
 
 Welcome to Qualia's documentation!
-==================================
+=====================================
+
 :Version: |version|
 
-Qualia
-======
-End-to-end training, quantization and deployment framework for deep neural networks on embedded devices.
+Qualia is an end-to-end framework for training, quantizing, and deploying deep neural networks on embedded devices.
 
+Getting Started
+====================
 .. toctree::
    :maxdepth: 1
-   :caption: User's manual
 
+   GettingStarted
    Installation
-   Update
-   User/Usage
-   User/ConfigurationFile
-   User/Components
-   User/MigrationPreviousVersions
-   Changelog
+   UsingDocker
 
+Package Management
+====================
 .. toctree::
    :maxdepth: 1
-   :caption: Developer's manual
+
+   UsingPDM
+   UsingUV
+   Update
+
+User Guide
+====================
+.. toctree::
+   :maxdepth: 1
+
+   Usage
+   ConfigurationFile
+   Components
+   MigrationPreviousVersions
+
+Developer Guide
+====================
+.. toctree::
+   :maxdepth: 1
 
    Developer/RepositoryStructure
    Developer/PackageStructure
-   Developer/PluginArchitecture
+   Developer/Plugins
+   Developer/AddDataset
    Developer/Documentation
    Developer/CodeStyleLinter
    Developer/TypeChecking
    Developer/Tests
 
+Project Information
+====================
+.. toctree::
+   :maxdepth: 1
+
+   Changelog
 
 Indices and tables
-==================
+====================
 
 * :ref:`genindex`
 * :ref:`modindex`

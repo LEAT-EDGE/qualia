@@ -1,11 +1,5 @@
 # Writing documentation
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## API documentation
 
 API documentation is the documentation associated to the source code.

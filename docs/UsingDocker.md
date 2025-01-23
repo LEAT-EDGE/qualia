@@ -1,11 +1,5 @@
 # Qualia Docker Environment
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## Introduction
 This container provides a ready-to-use environment with all dependencies pre-installed for Qualia development and deployment. It includes CUDA support for GPU acceleration.
 

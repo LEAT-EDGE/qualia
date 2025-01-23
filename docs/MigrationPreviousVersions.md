@@ -1,11 +1,5 @@
 # Migration from previous versions
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## Migration from 1.0 (known as MicroAI)
 
 Qualia was previously known as MicroAI in its 1.0 version. For users of MicroAI 1.0, Qualia 2.0 mainly brings 3 major breaking changes:

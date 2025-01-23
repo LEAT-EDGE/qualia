@@ -1,11 +1,5 @@
 # Python Package Structure
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## Basic Structure
 
 A typical Qualia package (core or plugin) has the following structure:

@@ -1,11 +1,5 @@
 # Type checking
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 Python is originally a dynamic and implicitely typed language.
 However, dynamic typing can be the source of many bugs, so in an attempt to make Python code more robust, static type checking with type hints was introduced.
 

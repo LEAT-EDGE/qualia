@@ -1,11 +1,5 @@
 # Update
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## User Setup
 
 ### Option 1: Using uv (Recommended for Performance)

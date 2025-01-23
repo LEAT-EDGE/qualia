@@ -1,10 +1,4 @@
 # Getting Started with Qualia
-
-```{contents} Table of Contents
----
-depth: 3
----
-```
 ## Introduction
 This guide will help you get up and running with Qualia, a modular system for machine learning experimentation and deployment.
 We will show you a very simple installation and exemple. If you want more detail about the different part we advice you to seek the answers in the documentation :
@@ -16,7 +10,7 @@ We will show you a very simple installation and exemple. If you want more detail
 ## Prerequisites
 
 Before you begin, ensure you have:
-- Python (version 3.9-3.12, recommended: 3.11)
+- Python (version 3.9-3.12, recommended: 3.12)
 - Git (for cloning repositories)
 - Basic familiarity with command line operations
 

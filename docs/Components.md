@@ -1,11 +1,5 @@
 # Qualia components
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## Dependency graph
 
 ![Component_Diagram.svg](Component_Diagram.svg)

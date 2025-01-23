@@ -1,11 +1,5 @@
 # Qualia Plugins Guide
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## Introduction
 
 Qualia's plugin system allows extending core functionality through modular packages. Plugins can add new features, override existing ones, or provide experimental implementations while maintaining clean separation from core components.
