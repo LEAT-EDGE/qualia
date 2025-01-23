@@ -1,5 +1,10 @@
 # Qualia Configuration Guide
 
+```{contents} Table of Contents
+---
+depth: 3
+---
+```
 ## Overview
 
 Qualia uses TOML configuration files to define machine learning experiments. This guide explains each configuration section and its available options.
@@ -24,6 +29,13 @@ kind = "UCI_HAR"
 [model_template]
 kind = "CNN"
 epochs = 10
+
+# CNN architecture
+[[model]]
+name = "uci-har_cnn_simple"
+params.filters = [5, 5]        # Two conv layers with 5 filters each
+params.kernel_sizes = [2, 2]   # 2x2 kernels
+params.pool_sizes = [2, 0]     # Pooling after first conv layer
 ```
 
 ## Required Sections

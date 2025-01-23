@@ -1,16 +1,15 @@
 # Comprehensive Guide to UV, Venv, and Pip in Python
 
-## Table of Contents
-1. Introduction to Package Management Tools
-2. UV Installation
-3. Virtual Environment Management
-4. Package Installation and Management
-5. Best Practices
-6. Comparison with Traditional Tools
+```{contents} Table of Contents
+---
+depth: 3
+---
+```
 
 ## 1. Introduction to Package Management Tools
 UV is a modern, high-performance Python package installer and resolver written in Rust. It serves as a faster alternative to traditional tools like pip and virtualenv.
 
+[Official UV documentation](https://docs.astral.sh/uv/)
 ### Key Features of UV
 - Significantly faster package installation
 - Built-in virtual environment management

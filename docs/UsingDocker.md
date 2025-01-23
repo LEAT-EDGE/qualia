@@ -1,5 +1,12 @@
 # Qualia Docker Environment
 
+```{contents} Table of Contents
+---
+depth: 3
+---
+```
+
+## Introduction
 This container provides a ready-to-use environment with all dependencies pre-installed for Qualia development and deployment. It includes CUDA support for GPU acceleration.
 
 ## Prerequisites
@@ -59,9 +66,13 @@ cd qualia/docker
 
 # Build the image (this may take several minutes)
 sudo docker build -f qualia-opensource-cuda -t qualia:cuda .
+```
 
-# Run the container with GPU support
-sudo docker run -d --gpus all -p 2222:22 qualia:cuda
+**Or**
+
+```bash
+# Pull from Docker Hub
+docker pull gcariou/leat-edge-qualia:cuda
 ```
 
 ### Using Custom Configs and Datasets
@@ -71,11 +82,17 @@ You can mount a volume with Docker or transfer the files using SCP.
 ```bash
 # Run the container and mounts your current directory to `/workspace` in the container.
 docker run -d --gpus all -p 2222:22 -v .:/workspace qualia:cuda
+
+# Or if you pulled the image from docker hub
+docker run -d --gpus all -p 2222:22 gcariou/leat-edge-qualia:cuda
 ```
 
 #### Option 2: Transfer Files via SCP
 
 ```bash
+# Run the container with GPU support
+sudo docker run -d --gpus all -p 2222:22 qualia:cuda
+
 # Copy files TO the container
 scp -P 2222 -r data/ root@localhost:/workspace/                  # Copy directory
 scp -P 2222 CNN_float32_train.toml root@localhost:/workspace/    # Copy file
@@ -129,7 +146,3 @@ docker rm <container_id>
 2. If GPU is not detected:
    - Verify NVIDIA drivers are installed: `nvidia-smi`
    - Check container GPU access: `docker exec <container_id> nvidia-smi`
-
-## Additional Resources
-
-For more information on using Qualia, refer to the [Qualia Documentation](link_to_docs).

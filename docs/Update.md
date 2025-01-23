@@ -23,6 +23,9 @@ uv pip install -U qualia-core[pytorch]
 
 # With additional dependencies
 uv pip install -U "qualia-core[pytorch,visualize,test]"
+
+# Update every package in the environnement
+uv pip freeze | cut -d= -f1 | xargs uv pip install -U
 ```
 
 ### Option 2: Using PDM (Recommended for Dependency Management)
@@ -59,8 +62,13 @@ pip install -U "qualia-core[pytorch,visualize,test]"
 
 For developer setups, first update the source code:
 
-1. Update the git repositories:
+Update the source code from the git repositories:
 ```bash
+# Activate environment
+source qualia_env/bin/activate  # Unix/macOS
+qualia_env\Scripts\activate     # Windows
+
+# Update repositories
 cd qualia
 git pull
 ```
@@ -75,12 +83,16 @@ Repeat for any additional Qualia components you're using.
 cd qualia
 source qualia_env/bin/activate
 
-# Update development installation
-uv pip install -U -e ./qualia-core[pytorch,clearml] --dev
+# Update all dependencies
+uv pip freeze | cut -d= -f1 | xargs uv pip install -U
 
-# For additional components
+# Development installation
+cd qualia
+uv pip install -U -e ./qualia-core[pytorch,clearml]
+
+# Component-specific
 cd qualia-core
-uv pip install -U -e .[pytorch,clearml] --dev
+uv pip install -U -e .[pytorch,clearml]
 ```
 
 #### Option 2: Using PDM
@@ -98,38 +110,11 @@ pdm update qualia-core
 
 #### Option 3: Using pip
 
-Move into the Qualia component directory:
-```bash
-cd qualia-core
-```
+Note: pip only updates dependencies when explicitly required.
 
 Update the development installation:
 ```bash
 pip install -U -e .[pytorch]
 ```
 
-Repeat for additional components, following the dependency graph order (see <project:User/Components.md>).
-
-## Available Optional Dependencies
-
-When updating, you can include additional features by adding them in brackets:
-
-- Machine Learning: `[pytorch]`, `[tensorflow]`
-- Development: `[codegen]`, `[tests]`, `[lint]`, `[typecheck]`, `[docs]`
-- Visualization: `[visualize]`, `[clearml]`
-- Datasets: `[gtsrb]`, `[gsc]`, `[pytorch3drotation]`, `[dataaugmentation_image]`
-- Deployment: `[deployment-sparkfunedge]`, `[evaluation-host-tflite]`, `[evaluation-target-qualia]`
-
-The list above may not be up to date. You can verify in [[Installation]].
-
-Remember to include all required dependencies when updating. For example:
-```bash
-# Using uv
-uv pip install -U "qualia-core[pytorch,visualize,clearml]"
-
-# Using PDM
-pdm update "qualia-core[pytorch,visualize,clearml]"
-
-# Using pip
-pip install -U "qualia-core[pytorch,visualize,clearml]"
-```
+Repeat for additional components, following the dependency graph order (see [[Components]]).

@@ -14,7 +14,7 @@ Welcome to the Qualia installation guide. Qualia is a modular system composed of
 ## Before You Begin
 
 ### System Requirements
-- Python >= 3.9, <= 3.12 (recommended: 3.11)
+- Python >= 3.9, <= 3.12 (recommended: 3.12)
 - Git
 - For GPU support: NVIDIA GPU with appropriate drivers
 
@@ -23,7 +23,7 @@ Welcome to the Qualia installation guide. Qualia is a modular system composed of
 Virtual environments provide isolated spaces for Python packages, preventing conflicts between different projects and making your setup more reproducible. We'll use them throughout this guide.
 
 ## User Setup
-
+Brackets enable specifying optional dependency groups at installation, see the "Optional Dependencies" section below for more information.
 ### Option 1: Using uv (Recommended for Performance)
 
 [uv](https://github.com/astral-sh/uv) is an extremely fast Python package installer and resolver.
@@ -115,7 +115,7 @@ pdm use "$(pwd)/qualia_env/bin/python"
 pdm add -e ./qualia-core[pytorch,clearml] --dev
 
 # For additional components
-git clone git@your-gitlab-server:qualia-core.git
+git clone https://github.com/LEAT-EDGE/qualia-core.git
 pdm add -e ./qualia-core[pytorch,clearml] --dev
 ```
 
@@ -123,14 +123,9 @@ The `-e` flag enables "editable" mode, allowing source code changes to take effe
 
 ## Docker Setup
 
-For a ready-to-use environment with GPU support, use our Docker container.
+For a ready-to-use environment with GPU support, use our Docker container. 
 
-### Prerequisites
-- Ubuntu Linux (tested on Ubuntu 22.04 and 24.04)
-- NVIDIA GPU with drivers
-- Docker Engine and NVIDIA Container Toolkit
-
-[Detailed Docker setup instructions continue as in the original document...]
+[Detailed Docker setup instructions continue as in the original document...](UsingDocker)
 
 ## Optional Dependencies
 
@@ -154,6 +149,9 @@ Available options:
 - Datasets: `[gtsrb]`, `[gsc]`, `[pytorch3drotation]`, `[dataaugmentation_image]`
 - Deployment: `[deployment-sparkfunedge]`, `[evaluation-host-tflite]`, `[evaluation-target-qualia]`
 
+## Qualia components
+If you want to take a look at all the available components here is the link [Optional Components](Components).
+
 ## Common Issues and Solutions
 
 ### Package Installation Errors
@@ -170,6 +168,7 @@ pdm add pip virtualenv graphviz tensorflow torch-optimizer matplotlib numpy pydo
 sudo apt install cmake ninja-build git gcc
 ```
 
+Cmake ninja-build gcc are used for compiling C code.
 ### Environment Issues
 
 ```bash
@@ -182,14 +181,14 @@ pip show qualia-core
 # If using wrong Python version
 uv venv qualia_env --python=3.11
 # or with PDM
-pdm venv create -n qualia_env --python=3.11
+pdm venv create -n qualia_env 3.11
 ```
 
-## Getting Help
+### Others
 
 If you encounter issues:
 1. Check error messages carefully
-2. Verify Python version (3.11 recommended)
+2. Verify Python version (3.12 recommended)
 3. Ensure virtual environment is activated
 4. Check all dependencies are installed
 

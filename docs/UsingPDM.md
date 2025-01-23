@@ -1,17 +1,15 @@
 # Complete Guide to PDM (Python Development Master)
 
-## Table of Contents
-1. Introduction to PDM
-2. Installation
-3. Project Management
-4. Dependency Management
-5. Virtual Environment Handling
-6. Publishing Packages
-7. Best Practices
-8. Advanced Features
+```{contents} Table of Contents
+---
+depth: 3
+---
+```
 
 ## 1. Introduction to PDM
 PDM is a modern Python package manager that supports PEP 582 and uses pyproject.toml for dependency specification. It aims to bring modern Python packaging features to developers while maintaining ease of use.
+
+[PDM official documentation](https://pdm-project.org/en/latest/)
 
 ### Key Features
 - PEP 582 support (local package installation)
