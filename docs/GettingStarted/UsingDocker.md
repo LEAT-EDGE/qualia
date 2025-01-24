@@ -1,5 +1,6 @@
 # Qualia Docker Environment
 
+## Introduction
 This container provides a ready-to-use environment with all dependencies pre-installed for Qualia development and deployment. It includes CUDA support for GPU acceleration.
 
 ## Prerequisites
@@ -59,9 +60,40 @@ cd qualia/docker
 
 # Build the image (this may take several minutes)
 sudo docker build -f qualia-opensource-cuda -t qualia:cuda .
+```
 
+**Or**
+
+```bash
+# Pull from Docker Hub
+docker pull gcariou/leat-edge-qualia:cuda
+```
+
+### Using Custom Configs and Datasets
+You can mount a volume with Docker or transfer the files using SCP.
+#### Option 1: Mount Local Directory
+
+```bash
+# Run the container and mounts your current directory to `/workspace` in the container.
+docker run -d --gpus all -p 2222:22 -v .:/workspace qualia:cuda
+
+# Or if you pulled the image from docker hub
+docker run -d --gpus all -p 2222:22 gcariou/leat-edge-qualia:cuda
+```
+
+#### Option 2: Transfer Files via SCP
+
+```bash
 # Run the container with GPU support
 sudo docker run -d --gpus all -p 2222:22 qualia:cuda
+
+# Copy files TO the container
+scp -P 2222 -r data/ root@localhost:/workspace/                  # Copy directory
+scp -P 2222 CNN_float32_train.toml root@localhost:/workspace/    # Copy file
+
+# Copy files FROM the container
+scp -P 2222 -r root@localhost:/workspace/out/ ./                 # Copy output directory
+scp -P 2222 root@localhost:/workspace/out/results.txt ./         # Copy specific file
 ```
 
 ## Using the Container
@@ -78,27 +110,6 @@ ssh-keygen -f "$HOME/.ssh/known_hosts" -R "[localhost]:2222"
 # Method 2 (using explicit path):
 ssh-keygen -f '/home/$USER/.ssh/known_hosts' -R '[localhost]:2222'
 # Both commands do the same thing, just using different ways to reference your home directory
-```
-
-### Using Custom Configs and Datasets
-You can mount a volume with Docker or transfer the files using SCP.
-#### Option 1: Mount Local Directory
-
-```bash
-# Run the container and mounts your current directory to `/app` in the container.
-docker run -d --gpus all -p 2222:22 -v .:/app qualia:cuda
-```
-
-#### Option 2: Transfer Files via SCP
-
-```bash
-# Copy files TO the container
-scp -P 2222 -r data/ root@localhost:/app/                  # Copy directory
-scp -P 2222 CNN_float32_train.toml root@localhost:/app/    # Copy file
-
-# Copy files FROM the container
-scp -P 2222 -r root@localhost:/app/out/ ./                 # Copy output directory
-scp -P 2222 root@localhost:/app/out/results.txt ./         # Copy specific file
 ```
 
 ### Container Management
@@ -129,7 +140,3 @@ docker rm <container_id>
 2. If GPU is not detected:
    - Verify NVIDIA drivers are installed: `nvidia-smi`
    - Check container GPU access: `docker exec <container_id> nvidia-smi`
-
-## Additional Resources
-
-For more information on using Qualia, refer to the [Qualia Documentation](link_to_docs).

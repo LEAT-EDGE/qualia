@@ -1,11 +1,5 @@
 # Changelog
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## 2.3.0 (15/07/2024)
 
 ### Qualia-Core

@@ -1,11 +1,5 @@
 # Code style and linter
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## Code style
 
 Code style should try to be homogeneous across the entire project as much as possible.

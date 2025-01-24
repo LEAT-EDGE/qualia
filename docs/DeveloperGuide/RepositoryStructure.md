@@ -1,11 +1,5 @@
 # Repository structure
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 The core and the plugins of Qualia and Qualia-CodeGen each have their own independent git repository,
 with a number of files and directories at the root.
 Each of them are described below, in alphabetical order with the directories first.
@@ -22,7 +16,7 @@ They are generally organized with a subdirectory for each dataset but this is no
 
 Additionally, the `conf/tests/` directory is used to store functional test configurations.
 
-For more information, see <project:/User/ConfigurationFile.md>.
+For more information, see [ConfigurationFile](../UserGuide/ConfigurationFile)
 
 ## `docs/`
 

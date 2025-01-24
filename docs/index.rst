@@ -1,45 +1,63 @@
 .. Qualia documentation master file, created by
-   sphinx-quickstart on Tue Sep 19 16:35:43 2023.
+   sphinx-quickstart
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
 .. _index:
 
 Welcome to Qualia's documentation!
-==================================
+=====================================
+
 :Version: |version|
 
-Qualia
-======
-End-to-end training, quantization and deployment framework for deep neural networks on embedded devices.
+Qualia is an end-to-end framework for training, quantizing, and deploying deep neural networks on embedded devices.
 
 .. toctree::
-   :maxdepth: 1
-   :caption: User's manual
+   :maxdepth: 2
+   :caption: Getting Started
 
-   Installation
-   Update
-   User/Usage
-   User/ConfigurationFile
-   User/Components
-   User/MigrationPreviousVersions
-   Changelog
+   GettingStarted/GettingStarted
+   GettingStarted/Installation
+   GettingStarted/UsingDocker
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Developer's manual
+   :maxdepth: 2
+   :caption: Package Management
 
-   Developer/RepositoryStructure
-   Developer/PackageStructure
-   Developer/PluginArchitecture
-   Developer/Documentation
-   Developer/CodeStyleLinter
-   Developer/TypeChecking
-   Developer/Tests
+   PackageManagement/UsingPDM
+   PackageManagement/UsingUV
+   PackageManagement/Update
 
+.. toctree::
+   :maxdepth: 2
+   :caption: User Guide
+
+   UserGuide/Usage
+   UserGuide/ConfigurationFile
+   UserGuide/Components
+   UserGuide/MigrationPreviousVersions
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Developer Guide
+
+   DeveloperGuide/RepositoryStructure
+   DeveloperGuide/PackageStructure
+   DeveloperGuide/Plugins
+   DeveloperGuide/AddDataset
+   DeveloperGuide/Documentation
+   DeveloperGuide/CodeStyleLinter
+   DeveloperGuide/TypeChecking
+   DeveloperGuide/Tests
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Project Information
+
+   ProjectInformation/Changelog
 
 Indices and tables
-==================
+====================
 
 * :ref:`genindex`
 * :ref:`modindex`

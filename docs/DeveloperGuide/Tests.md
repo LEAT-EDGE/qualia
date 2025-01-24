@@ -1,11 +1,5 @@
 # Tests
 
-```{contents} Table of Contents
----
-depth: 3
----
-```
-
 ## Run tests
 
 Make sure the `tests` dependency group is installed, e.g.:
