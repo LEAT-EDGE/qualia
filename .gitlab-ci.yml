@@ -13,7 +13,7 @@ doc-job:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   before_script:
     - pacman -Syu --noconfirm --needed rclone make git
-    - pacman -S --noconfirm --needed python-sphinx python-sphinx-autodoc-typehints python-sphinx_rtd_theme python-myst-parser
+    - pacman -S --noconfirm --needed python-sphinx python-sphinx-autodoc-typehints python-sphinx-furo python-myst-parser python-linkify-it-py
     - pacman -S --noconfirm --needed python-pip python-pdm python-numpy python-pytorch
     - pacman -S --noconfirm --needed python-docutils python-torchvision python-tqdm
     - pacman -S --noconfirm --needed python-blosc2 python-gitpython python-pycryptodome python-pyserial python-scikit-learn
