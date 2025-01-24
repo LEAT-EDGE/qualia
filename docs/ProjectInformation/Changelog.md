@@ -1,5 +1,103 @@
 # Changelog
 
+## 2.4.0 (24/01/2025)
+
+### Qualia-Core
+
+#### New features
+- `deployment.qualia_codegen.Linux`: use CMake project.
+- Add `NucleoH7S3L8` Qualia-CodeGen deployment target.
+- Add `NucleoU575ZIQ` Qualia-CodeGen deployment target.
+- `evaluation.host.Qualia`: collect all metrics.
+- `evaluation.target.Qualia`: get latency measurement from target.
+- Add `CMSISMFCC` DataAugmentation.
+- Add `Cutout1D` DataAugmentation.
+- Add `EZBirds` Dataset.
+- `learningframework.PyTorch`: implement `save_graph_plot()` to plot model topology to SVG file using torch.fx.
+- Add `SlopeMetric` PyTorch metric: linear regression slope.
+- `learningmodel.pytorch.QuantizedCNN`: add support for quantized GSP.
+- Add `ResNetSampleNorm` PyTorch model: ResNet with SampleNorm layer after input.
+- Add `ResNetStride` PyTorch model: ResNet with `strides` parameter for strided convolutions and `pool_sizes` for max-pooling.
+- Add `SampleNorm` and `QuantizedSampleNorm` PyTorch layers.
+- `postprocessing.QualiaCodeGen`: custom metrics instanciation with `metrics` param.
+
+#### Bug fixes
+- Make local git repository and git dependency optional.
+- Make `deploy.optimize` param optional.
+- `learningframework.Keras`: `save_graph_plot()` outputs to `out/learningmodel` subdirectory instead of current directory.
+- `learningframework.PyTorch`: do not attempt to compute predictions if confusion matrix is disabled.
+- `preprocessing`, `postprocessing`: make Matplotlib optional when visualization modules are not used.
+- `postprocessing.QuantizationAwareTraining`: `testacc` metric is optional.
+
+#### Breaking changes
+- `learningmodel.pytorch.CNN`: GSP makes last Conv layer implicit without BatchNorm.
+
+### Qualia-Plugin-SNN
+
+#### New features
+- Add `SpikingJellyMultiStepTimeStepsInData` LearningFramework.
+- Add `Add` and `QuantizedAdd` layers with SpikingJelly support.
+- Add `NucleoL452REP` Qualia-CodeGen deployment target.
+- `postprocessing.EnergyEstimationMetric`: input/output spike count.
+- `postprocessing.EnergyEstimationMetric`: handle multi-step mode and hybrid layers.
+- `postprocessing.EnergyEstimationMetric`: add support for ResNet.
+
+#### Bug fixes
+- `postprocessing.EnergyEstimationMetric`: take timsteps into account for biases.
+- `postprocessing.EnergyEstimationMetric`: take potential reads into account.
+- `postprocessing.EnergyEstimationMetric`: do not count reset and leak in case no IF activation.
+- `postprocessing.EnergyEstimationMetric`: compute Conv/FC as dense with MACs if input is non-binary.
+- `postprocessing.EnergyEstimationMetric`: use `e_rdram()` for `e_rdpot_conv_snn()`.
+
+#### Breaking changes
+- `learningmodel.pytorch.SCNN`: GSP makes last Conv layer implicit without BatchNorm.
+
+### Qualia-CodeGen-Core
+
+#### New features
+- Add `Concatenate` layer for Keras.
+- Add `Slice` layer for Keras 2.x `SlicingOpLambda` and Keras 3.x `GetItem`.
+- Add `Permute` layer for `torch.permute()`.
+- Add `SampleNorm` layer for Keras custom layer.
+- Add `MetricsConverter`: generate instanciation of C++ metrics.
+- `assets/include/model.hh`: add output quantization information.
+- `examples/Linux`: CMake project.
+- `examples/Linux`: use libqualia-neuralnetwork.
+- Add `examples/NucleoH7S3L8`.
+- Add `examples/NucleoU575ZIQ`.
+- `examples/NucleoL452REP`: measure latency on target.
+- `libqualia-neuralnetwork/Metrics`: add Accuracy, MAE, MSE, PCC and linear regression slope metrics in C++.
+- `libqualia-neuralnetwork/NeuralNetwork`: quantize targets to match outputs.
+- `libqualia-neuralnetwork`: install as Python package.
+- `libqualia-neuralnetwork/NeuralNetwork`: add metrics computation.
+
+#### Bug fixes
+- `graph.TorchModelGraph`: fix `AdaptiveAvgPool1d` argument.
+- `graph.TorchModelGraph`: fix handling of method before any module.
+- `graph.TorchModelGraph`: filter args of methods.
+- `graph.TorchModelGraph`: fix input shape of methods.
+- `graph.KerasModelGraph`: fix input/output shape access for some Keras 3.x layers.
+- `graph.KerasModelGraph`: fix for Keras 3.x layers without dtype.
+- `graph.KerasModelGraph`: handle improperly ordered Keras graphs.
+- `assets/model.cc`: support multiple input layers.
+- `assets/layers/conv1d.cc`: fix usage of `arm_convolve_HWC_q15_fast_nonsquare()` due to undocumented constraint.
+- `examples/Linux`: disable `-floop-nest-optimize`, broken with libisl 0.27.
+
+#### Breaking changes
+- `learningmodel.pytorch.SCNN`: GSP makes last Conv layer implicit without BatchNorm.
+- `examples/NucleoL452REP`: default to 80 MHz core clock, optional 48 MHz setting.
+
+### Qualia-CodeGen-Plugin-SNN
+
+#### New features
+- `assets/include/model.hh`: add output quantization information.
+- `examples/Linux`: CMake project.
+- `examples/Linux`: use libqualia-neuralnetwork with SNN support.
+- Add `examples/NucleoL452REP`.
+
+#### Bug fixes
+- `graph.TorchModelGraph`: fix handling of method before any module.
+
 ## 2.3.0 (15/07/2024)
 
 ### Qualia-Core
