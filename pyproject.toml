@@ -9,7 +9,7 @@ authors = [
 ]
 description = "Qualia toolchain"
 readme = "README.md"
-requires-python = ">=3.9,<3.13"
+requires-python = ">=3.9,<3.14"
 license.text = "AGPL-3.0-or-later"
 classifiers = [
     "Programming Language :: Python :: 3",
