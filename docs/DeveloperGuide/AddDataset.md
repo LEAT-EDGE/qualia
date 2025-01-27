@@ -2,7 +2,12 @@
 
 ## Base Structure
 
-Start by creating a new dataset class that inherits from `RawDataset`. Here's a complete example showing the essential structure:
+Start by creating a new Python module in the `dataset` folder of the code base (Qualia-Core or a Qualia-Plugin source folder), called `MyNewDataset.py` in this example.
+Inside this module, create a `MyNewDataset` class that inherits from `RawDataset`.
+
+Adapt the `__call__` method to load your data and return the appropriate objects described below.
+
+Here's a complete example showing the essential structure:
 
 ```python
 from __future__ import annotations
@@ -74,13 +79,13 @@ class MyNewDataset(RawDataset):
 
 ### 1D Data (e.g., time series)
 - Input shape: `[N, S, C]`
-  - N: Number of samples
-  - S: Time steps
+  - N: Number of input data
+  - S: Time samples
   - C: Channels
 
 ### 2D Data (e.g., images)
 - Input shape: `[N, H, W, C]`
-  - N: Number of samples
+  - N: Number of input data
   - H: Height
   - W: Width
   - C: Channels
@@ -92,7 +97,7 @@ class MyNewDataset(RawDataset):
 
 ## Configuration and Parameters
 
-Parameters can be declared in the constructor and set via configuration file:
+Parameters can be declared in the constructor and set via configuration file, e.g.:
 
 ```python
 def __init__(self, path: str = '', dtype: str = 'float32') -> None:
@@ -101,18 +106,20 @@ def __init__(self, path: str = '', dtype: str = 'float32') -> None:
     self.__dtype = dtype
 ```
 
-Configuration file (`conf/dataset_name/config.toml`):
+Configuration file (`conf/mynewdataset/config.toml`):
 ```toml
 [dataset]
-name = "MyNewDataset"
-path = "path/to/data"  # accessed as params.path
-dtype = "float32"      # accessed as params.dtype
+kind = "MyNewDataset"
+params.path = "data/mynewdataset"
+params.dtype = "float32"
 ```
 
 ## Final Steps
 
-After creating your dataset class, import it in `__init__.py`:
+After creating your dataset class, import it in `dataset/__init__.py`:
 
 ```python
-from .my_new_dataset import MyNewDataset
+from .MyNewDataset import MyNewDataset
+
+__all__ = [..., 'MyNewDataset']
 ```
