@@ -30,7 +30,7 @@ name = "uci-har_cnn_simple"
 params.filters = [5, 5]        # Two conv layers with 5 filters each
 params.kernel_sizes = [2, 2]   # Two conv layers with kernel of length 2
 params.pool_sizes = [2, 0]     # Pooling after first conv layer
-params.dims = 1 # 1D convolutions
+params.dims = 1                # 1D convolutions
 ```
 
 ## Required Sections

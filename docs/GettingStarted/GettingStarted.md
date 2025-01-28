@@ -171,8 +171,9 @@ batch_size = 32
 [[model]]
 name = "uci-har_cnn_simple"
 params.filters = [5, 5]        # Two conv layers
-params.kernel_sizes = [2, 2]   # 2x2 kernels
+params.kernel_sizes = [2, 2]   # Two conv layers with kernel of length 2
 params.pool_sizes = [2, 0]     # First layer pooling
+params.dims = 1                # 1D convolutions
 ```
 
 Saves trained model in `out/learningmodel/`.
@@ -191,4 +192,4 @@ quantize = ['float32']       # Precision
 optimize = ['']              # Optimizations
 ```
 
-Generates C code and compiles for Linux host in `out/QualiaCodeGen/`.
+Generates C code in `out/qualia_codegen` and compiles for Linux host in `out/deploy/Linux`.
