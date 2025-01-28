@@ -28,8 +28,9 @@ epochs = 10
 [[model]]
 name = "uci-har_cnn_simple"
 params.filters = [5, 5]        # Two conv layers with 5 filters each
-params.kernel_sizes = [2, 2]   # 2x2 kernels
+params.kernel_sizes = [2, 2]   # Two conv layers with kernel of length 2
 params.pool_sizes = [2, 0]     # Pooling after first conv layer
+params.dims = 1 # 1D convolutions
 ```
 
 ## Required Sections
