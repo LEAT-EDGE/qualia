@@ -22,14 +22,6 @@ Qualia is an end-to-end framework for training, quantizing, and deploying deep n
 
 .. toctree::
    :maxdepth: 2
-   :caption: Package Management
-
-   PackageManagement/UsingPDM
-   PackageManagement/UsingUV
-   PackageManagement/Update
-
-.. toctree::
-   :maxdepth: 2
    :caption: User Guide
 
    UserGuide/Usage
@@ -49,6 +41,14 @@ Qualia is an end-to-end framework for training, quantizing, and deploying deep n
    DeveloperGuide/CodeStyleLinter
    DeveloperGuide/TypeChecking
    DeveloperGuide/Tests
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Package Management
+
+   PackageManagement/UsingPDM
+   PackageManagement/UsingUV
+   PackageManagement/Update
 
 .. toctree::
    :maxdepth: 2

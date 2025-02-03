@@ -16,7 +16,7 @@ Before you begin, ensure you have:
 
 ## Installation Options
 
-Please use one of the installation procedure listed in {doc}`Installation` or {doc}`UsingDocker`.
+Please use one of the installation procedure listed in [Installation](Installation) or [Using Docker](./UsingDocker).
 
 ## Tutorial: Your First Qualia Project
 
