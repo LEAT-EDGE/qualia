@@ -62,6 +62,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.intersphinx',
     'sphinx.ext.napoleon',
+    'sphinx_copybutton',
 ]
 
 # Only include supported extensions
@@ -113,6 +114,12 @@ html_theme_options = {
 }
 
 html_static_path = ['_static']
+
+html_search_options = {
+    'type': 'default',
+    'dict': None,
+    'languages': ['en'],
+}
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
