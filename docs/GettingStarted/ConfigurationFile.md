@@ -28,8 +28,9 @@ epochs = 10
 [[model]]
 name = "uci-har_cnn_simple"
 params.filters = [5, 5]        # Two conv layers with 5 filters each
-params.kernel_sizes = [2, 2]   # 2x2 kernels
+params.kernel_sizes = [2, 2]   # Two conv layers with kernel of length 2
 params.pool_sizes = [2, 0]     # Pooling after first conv layer
+params.dims = 1                # 1D convolutions
 ```
 
 ## Required Sections
@@ -149,7 +150,7 @@ Supported dataset:
     - Data: Audio samples
     - Note: Uses 48000 samples per record
 
-- `"ElicieHAR"`: Elicie Human Activity Recognition dataset ([link 1](https://zenodo.org/records/5659336) and [link 2](https://www.mdpi.com/2076-3417/12/8/3849))
+- `"EllcieHAR"`: UCA-EHAR Human Activity Recognition dataset ([link 1](https://zenodo.org/records/5659336) and [link 2](https://www.mdpi.com/2076-3417/12/8/3849))
     - `path`: Path to dataset directory (CSV files)
     - `variant`: One of:
         - `"PACK-2"`
@@ -432,8 +433,11 @@ Each postprocessing module can include:
     - `model`: Model configuration containing:
     - `params.quant_params`:
         - `bits`: Quantization bit width
-        - `force_q`: Optional forced quantization
-        - `LSQ`: Use LSQ quantization (default: False)
+        - `quantype`: Quantization type, `'fxp'` for fixed-point or `'fake'`
+        - `roundtype`: Rounding type, `'nearest'`, `'floor'` or `'ceil'`
+        - `range_setting`: Tensor range analysis, `'minmax'`, `'MSE_simulation'` or `'MSE_analysis'`
+        - `force_q`: Optionally force Qx coding for all layers (number of bits for fractional part)
+        - `LSQ`: Use LSQ quantization-aware training (default: False)
     - `optimizer`: Optional optimizer configuration
     - `evaluate_before`: Evaluate before QAT (default: True)
 - Output Files when `export=true`:
@@ -470,15 +474,19 @@ Each postprocessing module can include:
 # Fuse batch normalization and save weights
 [[postprocessing]]
 kind = "FuseBatchNorm"
-evaluate = true  # Evaluate model after fusion
+params.evaluate = true  # Evaluate model after fusion
 export = true    # Save fused model weights
 
 # Quantization-aware training
 [[postprocessing]]
 kind = "QuantizationAwareTraining"
-epochs = 5       # Number of QAT epochs
-model.params.quant_params = { bits = 8 }  # 8-bit quantization
-evaluate_before = true  # Evaluate model before QAT
+params.epochs = 5       # Number of QAT epochs
+params.model.params.quant_params.bits           = 8 # 8-bit quantization
+params.model.params.quant_params.quantype       = "fxp" # Fixed-point
+params.model.params.quant_params.roundtype      = "floor" # Floor rounding mode
+params.model.params.quant_params.range_setting  = "minmax" # Min-max range analysis
+params.model.params.quant_params.LSQ            = false # LSQ QAT disabled
+params.evaluate_before = true  # Evaluate model before QAT
 export = true    # Save quantized model
 ```
 
@@ -492,11 +500,11 @@ quantize = ["int8"] # Quantization format
 ```
 
  **`"QualiaCodeGen"`**
-Converts models to C code.
+Converts models to C code using Qualia-CodeGen.
 Supported Targets:
-- `"NucleoH7S3L8"` (STM32H7 board, up to 740MHz)
-- `"NucleoL452REP"` (STM32L4 board)
-- `"NucleoU575ZIQ"` (STM32U5 board)
+- `"NucleoH7S3L8"` (STMicroelectronics Nucleo-H7S3L8 board)
+- `"NucleoL452REP"` (STMicroelectronics Nucleo-L452RE-P board)
+- `"NucleoU575ZIQ"` (STMicroelectronics Nucleo-U575ZI-Q board)
 - `"SparkFunEdge"` (SparkFun Edge board)
 - `"LonganNano"` (Sipeed Longan Nano board)
 - `"Linux"` (for desktop/server deployment)
@@ -505,27 +513,9 @@ Supported Targets:
 **`"Keras2TFLite"`**
 Converts Keras models to TFLite format.
 Supported Targets:
-- `"Linux"` only
-
-
-**`"TFLite"`**
-For pre-converted TFLite models.
-Supported Targets:
-- `"Linux"` only, not usable implicitly
-
-
-**`"stm32cubeai"`**
-Uses STM32Cube.AI to deploy models on STM32 boards.
-Supported Targets:
-- `"NucleoH7S3L8"` (STM32H7 board)
-- `"NucleoL452REP"` (STM32L4 board)
-- `"STM32CubeAI"` (Generic STM32 with Cube.AI)
-
-
-**`"tflitemicro"`**
-TensorFlow Lite for Microcontrollers deployment.
-Supported Targets:
-- `"SparkFunEdge"` (SparkFun Edge board)
+- `"Linux"` (TFLite runtime or STM32Cube.AI runtime, not usable implicitly)
+- `"NucleoL452REP"` (STM32Cube.AI runtime, Nucleo-L452RE-P board)
+- `"SparkFunEdge"` (TFLite Micro runtime, SparkFun Edge board)
 
 **Example Configurations**
 ```toml

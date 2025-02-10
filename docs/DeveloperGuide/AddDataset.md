@@ -163,20 +163,20 @@ def __call__(self) -> RawDataModel:
 ```
 
 This is like the head chef that:
-11. Coordinates all the preparation steps
-12. Ensures quality control (logging)
-13. Plates the final dish (returns RawDataModel)
+1. Coordinates all the preparation steps
+2. Ensures quality control (logging)
+3. Plates the final dish (returns RawDataModel)
 
 ## Using Your Dataset
 
 Now that we've built our dataset class, we need to:
 
-14. Register it in `__init__.py`:
+4. Register it in `__init__.py`:
 ```python
 from .MNIST import MNIST  # Tell Qualia about our new dataset
 ```
 
-15. Create a configuration file (`config.toml`):
+5. Create a configuration file (`config.toml`):
 ```toml
 [dataset]
 kind = "MNIST"              # Which dataset to use
@@ -196,7 +196,7 @@ The configuration file is like a recipe that tells Qualia:
 
 Always test your dataset before using it in training:
 
-16. Basic loading test:
+6. Basic loading test:
 ```python
 dataset = MNIST(path="test_data")
 data = dataset()
@@ -206,7 +206,7 @@ print(f"Training data shape: {data.sets.train.x.shape}")
 print(f"Training labels shape: {data.sets.train.y.shape}")
 ```
 
-17. Full pipeline test:
+7. Full pipeline test:
 ```bash
 qualia ./config.toml preprocess_data
 ```
@@ -217,17 +217,17 @@ These tests help ensure your dataset will work correctly in the full Qualia pipe
 
 When implementing a dataset, you might encounter several common challenges:
 
-18. File Reading Issues:
+8. File Reading Issues:
    - Wrong file paths
    - Incorrect file format reading
    - Memory problems with large files
 
-19. Data Format Issues:
+9. Data Format Issues:
    - Wrong array shapes
    - Incorrect normalization
    - Type mismatches
 
-20. Memory Issues:
+10. Memory Issues:
    - Loading too much data at once
    - Not cleaning up temporary arrays
    - Using inefficient data types
