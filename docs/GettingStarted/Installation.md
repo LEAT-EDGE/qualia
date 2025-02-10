@@ -39,6 +39,9 @@ qualia_env\Scripts\activate     # Windows
 
 # Install Qualia with PyTorch support
 uv pip install qualia-core[pytorch]
+
+# Install Qualia Codegen if you want to generate code
+uv pip install qualia-codegen-core
 ```
 
 ### Option 2: Using PDM (Recommended for Dependency Management)
@@ -58,6 +61,9 @@ $(pdm venv activate qualia_env)
 
 # Install Qualia
 pdm add qualia-core[pytorch]
+
+# Install Qualia Codegen if you want to generate code
+pdm add qualia-codegen-core
 ```
 
 ### Option 3: Using pip (Simple Option)
@@ -72,6 +78,9 @@ qualia_env\Scripts\activate     # Windows
 
 # Install Qualia
 pip install -U qualia-core[pytorch]
+
+# Install Qualia Codegen if you want to generate code
+pip install qualia-codegen-core
 ```
 
 ## Developer Setup

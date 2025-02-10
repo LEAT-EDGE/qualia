@@ -27,9 +27,7 @@ Qualia is an end-to-end framework for training, quantizing, and deploying deep n
    :maxdepth: 2
    :caption: Plugins
 
-   Plugins/PluginSNN/GettingStartedSNN
-   Plugins/PluginSNN/InstallationSNN
-   Plugins/PluginSNN/ConfigurationFileSNN
+   Plugins/index
 
 .. toctree::
    :maxdepth: 2

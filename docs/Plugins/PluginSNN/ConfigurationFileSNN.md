@@ -290,13 +290,3 @@ params.postpool = "max"
 params.batch_norm = true
 params.force_projection_with_stride = true
 ```
-
-## Best Practices
-
-1. Choose appropriate number of timesteps based on your task
-2. Consider using batch normalization with SNNs
-3. Start with single-step mode for development, then move to multi-step if needed
-4. Monitor spike rates during training
-5. When using quantization, test different bit widths and thresholds
-6. Consider energy estimation for deployment scenarios
-7. Use preprocessing modules appropriate for your data type (event-based vs frame-based)
