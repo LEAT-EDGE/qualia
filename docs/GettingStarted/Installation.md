@@ -125,7 +125,7 @@ The `-e` flag enables "editable" mode, allowing source code changes to take effe
 
 For a ready-to-use environment with GPU support, use our Docker container. 
 
-[Detailed Docker setup instructions continue as in the original document...](UsingDocker)
+[Detailed Docker setup instructions continue as in the original document...](../PackageManagement/UsingDocker.md)
 
 ## Optional Dependencies
 
@@ -150,7 +150,7 @@ Available options:
 - Deployment: `[deployment-sparkfunedge]`, `[evaluation-host-tflite]`, `[evaluation-target-qualia]`
 
 ## Qualia components
-If you want to take a look at all the available components here is the link [Optional Components](../UserGuide/Components).
+If you want to take a look at all the available components here is the link [Optional Components](Components.md).
 
 ## Common Issues and Solutions
 

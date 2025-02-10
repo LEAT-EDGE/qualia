@@ -18,16 +18,18 @@ Qualia is an end-to-end framework for training, quantizing, and deploying deep n
 
    GettingStarted/GettingStarted
    GettingStarted/Installation
-   GettingStarted/UsingDocker
+   GettingStarted/ConfigurationFile
+   GettingStarted/Usage
+   GettingStarted/Components
+   GettingStarted/MigrationPreviousVersions
 
 .. toctree::
    :maxdepth: 2
-   :caption: User Guide
+   :caption: Plugins
 
-   UserGuide/Usage
-   UserGuide/ConfigurationFile
-   UserGuide/Components
-   UserGuide/MigrationPreviousVersions
+   Plugins/PluginSNN/GettingStartedSNN
+   Plugins/PluginSNN/InstallationSNN
+   Plugins/PluginSNN/ConfigurationFileSNN
 
 .. toctree::
    :maxdepth: 2
@@ -46,6 +48,7 @@ Qualia is an end-to-end framework for training, quantizing, and deploying deep n
    :maxdepth: 2
    :caption: Package Management
 
+   PackageManagement/UsingDocker
    PackageManagement/UsingPDM
    PackageManagement/UsingUV
    PackageManagement/Update

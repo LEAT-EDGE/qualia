@@ -111,4 +111,4 @@ Update the development installation:
 pip install -U -e .[pytorch]
 ```
 
-Repeat for additional components, following the dependency graph order (see [Components](../UserGuide/Components)).
+Repeat for additional components, following the dependency graph order (see [Components](../GettingStarted/Components.md)).
