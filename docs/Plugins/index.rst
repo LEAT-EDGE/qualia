@@ -9,3 +9,4 @@ Plugins SNN
    PluginSNN/GettingStartedSNN
    PluginSNN/InstallationSNN
    PluginSNN/ConfigurationFileSNN
+   PluginSNN/EnergyEstimationMetric
