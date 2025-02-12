@@ -32,18 +32,15 @@ To add the Energy Estimation Metric to your project, include it in your configur
 
 [[postprocessing]]
 kind = "EnergyEstimationMetric"
-
-[postprocessing.params]
-mem_width = 8
-fifo_size = 64
-total_spikerate_exclude_nonbinary = true
+params.mem_width = 8  # Memory width in bits
+params.fifo_size = 64  # FIFO buffer size
+params.total_spikerate_exclude_nonbinary = true
 
 [postprocessing.params.op_estimation_type]
-add = "ICONIP"
-mul = "saturation"
+add = "ICONIP"      # Energy estimation method for addition
+mul = "saturation"  # Energy estimation method for multiplication
 
-[postprocessing.params]
-sram_estimation_type = "new"
+params.sram_estimation_type = "new"  # SRAM estimation algorithm
 
 ```
 
