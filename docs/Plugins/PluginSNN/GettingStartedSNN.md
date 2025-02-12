@@ -1,28 +1,27 @@
 # Getting Started with Qualia-SNN
 
 ## Introduction
-This guide will walk you through creating your first Spiking Neural Network (SNN) project using Qualia-SNN. We'll build a speech recognition system using the Google Speech Commands (GSC) dataset, converting the audio data into spike-based representations that can be processed by our SNN.
+This guide will walk you through creating your first Spiking Neural Network (SNN) project using Qualia-SNN. We'll build a speech recognition system using the Google Speech Commands V2 (GSC) dataset, converting the audio data into spike-based representations that can be processed by our SNN.
 
 ## Prerequisites
 
 Before starting, ensure you have:
+- Qualia-core and following [Installation](../../GettingStarted/Installation)
 - Python (version 3.9-3.12, recommended: 3.12)
 - Git installed
+## Installation
+You must follow the [Installation of the SNN plugin](./InstallationSNN).
 
-## Installation and Project Setup
-
+## Project Setup
 Let's set up our environment:
 
 ```bash
 # Create a project directory
-mkdir qualia-snn-gsc
-cd qualia-snn-gsc
+mkdir -p qualia-snn-gsc/data/speech_commands
+cd qualia-snn-gsc/data
 
 # Download and extract GSC dataset to a dedicated directory
-mkdir -p data
-cd data
 wget https://storage.googleapis.com/download.tensorflow.org/data/speech_commands_v0.02.tar.gz
-mkdir speech_commands
 tar -xf speech_commands_v0.02.tar.gz -C speech_commands
 cd ../..
 ```
@@ -37,7 +36,6 @@ qualia-snn-gsc/
 │       ├── zero/
 │       ├── one/
 │       └── ... (other word directories)
-├── qualia-plugin-snn/
 └── config.toml              # We'll create this next
 ```
 

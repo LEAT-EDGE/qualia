@@ -28,19 +28,23 @@ The metric uses configurable energy values based on a 45nm ASIC implementation, 
 
 To add the Energy Estimation Metric to your project, include it in your configuration file (config.toml) under the postprocessing section:
 
-```toml
+``` toml
+
 [[postprocessing]]
 kind = "EnergyEstimationMetric"
-params.mem_width = 8               # Memory width in bits
-params.fifo_size = 64             # Size of input/output FIFOs
-params.total_spikerate_exclude_nonbinary = true  # Exclude non-binary data from total spike rate
 
-# Optional: Energy estimation method configuration
-params.op_estimation_type = {
-    add = "ICONIP",      # Energy estimation for addition
-    mul = "saturation"   # Energy estimation for multiplication
-}
-params.sram_estimation_type = "new"  # SRAM estimation algorithm
+[postprocessing.params]
+mem_width = 8
+fifo_size = 64
+total_spikerate_exclude_nonbinary = true
+
+[postprocessing.params.op_estimation_type]
+add = "ICONIP"
+mul = "saturation"
+
+[postprocessing.params]
+sram_estimation_type = "new"
+
 ```
 
 ### Configuration Parameters

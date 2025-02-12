@@ -1,28 +1,21 @@
 # Installation of Qualia SNN plugin
 First create your virtual environnement and install Qualia-core by following this [documentation](../../GettingStarted/Installation). Don't forget to start your virtual environnement !
-Let's create a new project and set up our environment:
 
+We'll follow this tree:
 ```bash
-mkdir qualia-snn
-cd qualia-snn
-
-# Install Qualia-SNN plugin
-git clone https://github.com/LEAT-EDGE/qualia-plugin-snn.git
-cd qualia-plugin-snn
-pip install -e .
-cd ..
-
-# Install Qualia-SNN-Codegen plugin
-git clone https://github.com/LEAT-EDGE/qualia-codegen-plugin-snn.git
-cd qualua-codegen-plugin-snn
-pip install -e .
-cd ..
+qualia
+├── qualia_env                # qualia venv created using uv
+├── qualia-codegen-core       # qualia core codegen directory
+├── qualia-core               # qualia core codegen directory
+├── qualia-codegen-plugin-snn # qualia snn codegen directory
+└── qualia-plugin-snn         # qualia snn directory
 ```
 
-Or using uv:
+Let's  set up our environment:
+
 ```bash
-mkdir qualia-snn
-cd qualia-snn
+# Don't forget to activate your venv
+source qualia_env/bin/activate 
 
 # Install Qualia-SNN plugin
 git clone https://github.com/LEAT-EDGE/qualia-plugin-snn.git
@@ -32,7 +25,9 @@ cd ..
 
 # Install Qualia-SNN-Codegen plugin
 git clone https://github.com/LEAT-EDGE/qualia-codegen-plugin-snn.git
-cd qualua-codegen-plugin-snn
+cd qualia-codegen-plugin-snn
 uv pip install -e .
 cd ..
 ```
+
+You can go back to the [Getting Started SNN](./GettingStartedSNN).
