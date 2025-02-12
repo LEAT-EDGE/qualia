@@ -44,6 +44,18 @@ params.sram_estimation_type = "new"  # SRAM estimation algorithm
 
 ```
 
+Then you will need to run the following command:
+```bash
+qualia ./config.toml train
+```
+
+If you have already train your model you may want to not train it again. You need to add the following parameter to your model to directly run the Energy Estimation Metric:
+```toml
+[[model]]  
+name = "gsc_cnn_m5_smaller"  
+load                = true  # Tel qualia to load an existing model
+train               = false # Tel qualia to not train this model
+```
 ### Configuration Parameters
 
 1. **Required Parameters**:
