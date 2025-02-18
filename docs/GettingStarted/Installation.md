@@ -16,6 +16,7 @@ Welcome to the Qualia installation guide. Qualia is a modular system composed of
 
 ### System Requirements
 - Python >= 3.9, <= 3.12 (recommended: 3.12) if you want to use system python.
+- Cmake >= 3.24
 - Git
 - For GPU support: NVIDIA GPU with appropriate drivers
 
