@@ -1,5 +1,77 @@
 # Changelog
 
+## 2.5.0 (19/02/2025)
+
+### Qualia-Core
+
+#### New features
+- Bump maximum Python version to 3.13.
+- Add `MNIST` Dataset.
+- Add `FashionMNIST` Dataset.
+- Add `ExponentialNoise` DataAugmentation.
+- `dataugmentation.pytorch.{ResizedCrop,Rotation2D}`: add `interpolation` parameter.
+- `deployment.stm32cubeai.NucleoL452REP`: upgrade to X-CUBE-AI 8.1.0.
+- `deployment.stm32cubeai.NucleoL452REP`: use CMake project instead of STM32CubeIDE.
+- `postprocessing.Keras2TFLite`: use `new_converter` by default.
+- Add `Windows` Qualia-CodeGen deployer.
+
+#### Bug fixes
+- Fix handling of configuration files without deployer.
+- `deployment.qualia_codegen.CMake`: Fix compatibility with CMake < 3.24.
+- `deployment.qualia_codegen.CMake`: Fallback to `make` if `ninja` is not found.
+- `preprocessing.Normalize`: fix use of list for `axis` parameter.
+- `utils.TensorFlowInitializer`: fix environment variables initialization on Windows.
+
+#### Breaking changes
+- `learningmodel.pytorch.ResNetStride`: rename `force_projection_with_stride` parameter to `force_projection_with_pooling` and disable by default.
+- `dataaugmentation.pytorch.GaussianNoise`: generate different noise for all dimensions.
+
+### Qualia-Plugin-SNN
+
+#### New features
+- Bump maximum Python version to 3.13.
+- Add `DVSGesture` and `DVSGestureWithPreprocessing` Datasets.
+- Add `SHD` Dataset.
+- Add `Group2TimeStepsBySample` Preprocessing.
+- Add `IntegrateEventsByFixedDuration` Preprocessing.
+- Add `IntegrateEventsByFixedFramesNumber` Preprocessing.
+- Add `OperationCounter` Postprocessing.
+- Add `Windows` Qualia-CodeGen deployer.
+- `postprocessing.EnergyEstimationMetric`: add support for quantized layers.
+- `postprocessing.EnergyEstimationMetric`: add support for Add layer in FNN.
+- `postprocessing.EnergyEstimationMetric`: add T. Louis operation energy estimation types "saturation", "linear", "quadratic".
+- `postprocessing.EnergyEstimationMetric`: add T. Louis memory energy estimation model.
+- `postprocessing.QualiaCodeGen`: add `timestep_mode` parameter (`'duplicate'` by default, use `'iterate'` when using `SpikingJellyTimeStepsInData`)
+- `postprocessing.QualiaCodeGen`: handle SpikingJelly AvgPool/MaxPool layers.
+- `learningframework.SpikingJellyTimeStepsInData`: handle non-timestep-aware dataaugmentation by merging timestep dimension with batch dimensions.
+
+#### Bug fixes
+- `learningframework.SpikingJellyTimeStepsInData`: fix dimension reordering for 2D input data.
+- `learningframework.SpikingJellyMultiStepTimeStepsInData`: fix dimension reordering.
+- `postprocessing.EnergyEstimationMetric`: compute acc for bias in Conv spike layer with non-spike input.
+- `postprocessing.EnergyEstimationMetric`: compute FC spike layer with non-spike input as sparse with MAC operations.
+- `postprocessing.EnergyEstimationMetric`: no MAC operation for FNN Add layer.
+
+#### Breaking changes
+
+### Qualia-CodeGen-Core
+
+#### New features
+- Bump maximum Python version to 3.13.
+
+#### Bug fixes
+- `examples/Linux/CMakeLists.txt`: prevent linking with non-existant sanitizer lib on Windows.
+
+### Qualia-CodeGen-Plugin-SNN
+
+#### New features
+- Bump maximum Python version to 3.13.
+- `assets/model.hh`: add `MODEL_INPUT_TIMESTEP_MODE_{DUPLICATE,ITERATE}` constant to declare chosen timestep handling mode.
+- `examples/`: handle `'iterate'` timestep mode (timesteps in data).
+
+#### Bug fixes
+- `examples/Linux/SpikingNeuralNetwork.h`: prevent overflow when accumulating over timesteps.
+
 ## 2.4.0 (24/01/2025)
 
 ### Qualia-Core
