@@ -21,8 +21,8 @@ import logging
 import sys
 from pathlib import Path
 import numpy as np
-from qualia_core.datamodel.RawDataset import RawDataset
 from qualia_core.datamodel.RawDataModel import RawData, RawDataSets, RawDataModel
+from qualia_core.dataset.RawDataset import RawDataset
 
 logger = logging.getLogger(__name__)
 

@@ -52,8 +52,6 @@
 - `postprocessing.EnergyEstimationMetric`: compute FC spike layer with non-spike input as sparse with MAC operations.
 - `postprocessing.EnergyEstimationMetric`: no MAC operation for FNN Add layer.
 
-#### Breaking changes
-
 ### Qualia-CodeGen-Core
 
 #### New features
