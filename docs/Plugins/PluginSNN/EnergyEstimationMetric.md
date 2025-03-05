@@ -35,8 +35,8 @@ kind = "EnergyEstimationMetric"
 params.mem_width = 8
 params.fifo_size = 64
 params.total_spikerate_exclude_nonbinary    = true
-params.op_estimation_type.add               = "ICONIP"
-params.op_estimation_type.mul               = "saturation"
+params.op_estimation_type.add               = "linear"
+params.op_estimation_type.mul               = "quadratic"
 params.sram_estimation_type                 = "new"
 
 ```
@@ -155,8 +155,8 @@ kind = "EnergyEstimationMetric"
 params.mem_width = 8
 params.fifo_size = 64
 params.total_spikerate_exclude_nonbinary    = true
-params.op_estimation_type.add               = "ICONIP"
-params.op_estimation_type.mul               = "saturation"
+params.op_estimation_type.add               = "linear"
+params.op_estimation_type.mul               = "quadratic"
 params.sram_estimation_type                 = "new"
 
 # Model configuration
