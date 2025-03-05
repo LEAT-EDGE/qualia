@@ -31,16 +31,13 @@ To add the Energy Estimation Metric to your project, include it in your configur
 ``` toml
 
 [[postprocessing]]
-kind = "EnergyEstimationMetric"
-params.mem_width = 8  # Memory width in bits
-params.fifo_size = 64  # FIFO buffer size
-params.total_spikerate_exclude_nonbinary = true
-
-[postprocessing.params.op_estimation_type]
-add = "ICONIP"      # Energy estimation method for addition
-mul = "saturation"  # Energy estimation method for multiplication
-
-params.sram_estimation_type = "new"  # SRAM estimation algorithm
+kind = "EnergyEstimationMetric"     
+params.mem_width = 8
+params.fifo_size = 64
+params.total_spikerate_exclude_nonbinary    = true
+params.op_estimation_type.add               = "ICONIP"
+params.op_estimation_type.mul               = "saturation"
+params.sram_estimation_type                 = "new"
 
 ```
 
@@ -126,78 +123,106 @@ Let's walk through a complete, practical example using the Google Speech Command
 
 ```toml
 [bench]
-name = "GSC_SNN_example"
-seed = 42
-first_run = 1
-last_run = 1
-plugins = ["qualia_plugin_snn"]  # Enable SNN support
+name        = "GSC_SNN_example"
+seed        = 42
+first_run   = 1
+last_run    = 1
+plugins     = ["qualia_plugin_snn"]         # Enable SNN support
 
 [learningframework]
-kind = "SpikingJellyMultiStep"  # Multi-step processing for efficiency
-
-[deploy]
-target = "Linux"
-converter.kind = "QualiaCodeGen"
-quantize = ["float32"]
-optimize = [""]
-compress = [1]
+kind = "SpikingJellyMultiStep"              # Multi-step processing for efficiency
 
 [dataset]
-kind = "GSC"
-params.path = "data/speech_commands"  # Path to extracted dataset
-params.variant = "v2"
-params.subset = "digits"
+kind            = "GSC"
+params.path     = "data/speech_commands"    # Path to extracted dataset
+params.variant  = "v2"
+params.subset   = "digits"
 params.train_valid_split = true
 
 [[preprocessing]]
 kind = "Class2BinMatrix"
 
 [[postprocessing]]
-kind = "EnergyEstimationMetric"
-params.mem_width = 8  # Memory width in bits
-params.fifo_size = 64  # FIFO buffer size
-params.total_spikerate_exclude_nonbinary = true
+kind            = "FuseBatchNorm"   # All Batchnorm must be Fused before the estimation
+export          = true
+params.evaluate = false
 
-[postprocessing.params.op_estimation_type]
-add = "ICONIP"      # Energy estimation method for addition
-mul = "saturation"  # Energy estimation method for multiplication
+[[postprocessing]]
+kind = "OperationCounter"           # Information about Operations and Memory access
 
-params.sram_estimation_type = "new"  # SRAM estimation algorithm
+[[postprocessing]]
+kind = "EnergyEstimationMetric"     
+params.mem_width = 8
+params.fifo_size = 64
+params.total_spikerate_exclude_nonbinary    = true
+params.op_estimation_type.add               = "ICONIP"
+params.op_estimation_type.mul               = "saturation"
+params.sram_estimation_type                 = "new"
 
 # Model configuration
 [model_template]
 kind = "SCNN"  # Spiking CNN
-params.dims = 1
-epochs = 8
-batch_size = 512
-params.timesteps = 4  # Number of timesteps for temporal processing
-
-# Spiking neuron configuration
-[model_template.params.neuron]
-kind = "LIFNode"  # Leaky Integrate-and-Fire neuron
-params.tau = 2.0  # Membrane time constant
-params.v_threshold = 1.0
-params.v_reset = false  # Soft reset
-params.detach_reset = true
-params.step_mode = "m"  # Multi-step mode
-params.backend = "torch"  # Use GPU acceleration if available
+params.dims         = 1
+epochs              = 10
+batch_size          = 512
+params.timesteps    = 2                         # Number of timesteps for temporal processing
 
 [model_template.optimizer]
 kind = "Adam"
-params.lr = 0.001
+params.lr = 0.002
 
 [[model]]
-name = "gsc_cnn_m5_smaller"
-params.filters = [16, 16, 32, 64]
-params.kernel_sizes = [40, 3, 3, 3]
-params.paddings = [20, 1, 1, 1]
-params.strides = [8, 1, 1, 1]
-params.pool_sizes = [4, 4, 4, 4]
-params.postpool = 3
-params.dropouts = [0, 0, 0, 0, 0.5]
-params.fc_units = []
-params.batch_norm = true
+name = "gsc_scnn_m5_smaller_IF"
+load                = false
+train               = true
+params.filters 		= [16, 16, 32, 64]
+params.kernel_sizes	= [40, 3, 3, 3]
+params.paddings		= [20, 1, 1, 1]
+params.strides		= [8, 4, 4, 4]
+params.pool_sizes	= [0, 0, 0, 0]
+params.dropouts     = [0, 0, 0, 0]
+params.fc_units     = [] 
+params.gsp          = true                      # End with a global sum pooling
+params.batch_norm	= true
+params.neuron.kind  = "IFNode"                  # Leaky Integrate-and-Fire neuron
+params.neuron.params.v_threshold    = 1.0
+params.neuron.params.v_reset        = false     # Soft reset, foat value for Hard reset
+params.neuron.params.detach_reset   = true
+params.neuron.params.step_mode      = "m"       # Multi-step mode
+params.neuron.params.backend        = "torch"   # Use GPU acceleration if available
 disabled = false
+
+[[model]]
+name = "gsc_scnn_m5_smaller_LIF"
+load                = false
+train               = true
+params.filters 		= [16, 16, 32, 64]
+params.kernel_sizes	= [40, 3, 3, 3]
+params.paddings		= [20, 1, 1, 1]
+params.strides		= [8, 4, 4, 4]
+params.pool_sizes	= [0, 0, 0, 0]
+params.dropouts     = [0, 0, 0, 0]
+params.fc_units     = []
+params.gsp          = true
+params.batch_norm	= true
+params.neuron.kind  = "LIFNode"                 # Leaky Integrate-and-Fire neuron
+params.neuron.params.tau            = 2.0       # Membrane time constant
+params.neuron.params.v_threshold    = 1.0
+params.neuron.params.v_reset        = false     # Soft reset, foat value for Hard reset
+params.neuron.params.detach_reset   = true
+params.neuron.params.step_mode      = "m"       # Multi-step mode
+params.neuron.params.backend        = "torch"   # Use GPU acceleration if available
+disabled = false
+
+#############################
+#     NEEDED RESOURCES      #
+#############################
+# 1.9 Gb GPU RAM
+# < 1 min train / model
+# trageted test accuracy :
+#   gsc_scnn_m5_smaller_IF  : 0.620
+#   gsc_scnn_m5_smaller_LIF : 0.657
+#############################
 ```
 
 ### Understanding the Example
