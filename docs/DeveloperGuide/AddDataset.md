@@ -2,6 +2,10 @@
 
 When adding a new dataset to Qualia, we're creating a bridge between raw data files and Qualia's machine learning pipeline. Think of it like building a translator that takes your data and makes it speak Qualia's language. Let's understand this process deeply, using MNIST as our learning example.
 
+## Summary
+Start by creating a new Python module in the `dataset` folder of the code base (Qualia-Core or a Qualia-Plugin source folder), called `MyNewDataset.py` in this example.
+Inside this module, create a `MyNewDataset` class that inherits from `RawDataset`.
+Adapt the `__call__` method to load your data and return the appropriate objects described below.
 ## First, Let's Understand What We're Building
 
 Before writing any code, we need to understand what a dataset class does in Qualia. Think of it as a factory that:
@@ -39,17 +43,15 @@ Let's understand each import and why we need it:
 - `RawData`, `RawDataSets`, `RawDataModel`: The containers that Qualia expects
 
 ### 2. The Initialization Method: Setting Up Our Dataset
-
+Initialize the dataset.
+Think of this like setting up your workspace before starting work.
+We need to:
+1. Know where to find our data files
+2. Decide which version of the data we want
+3. Set up our working environment
 ```python
 def __init__(self, path: str = '', variant: str = 'raw') -> None:
-    """Initialize the dataset.
     
-    Think of this like setting up your workspace before starting work.
-    We need to:
-    1. Know where to find our data files
-    2. Decide which version of the data we want
-    3. Set up our working environment
-    """
     super().__init__()  # Set up the basic RawDataset structure
     self.__path = Path(path)  # Convert string path to a proper Path object
     self.__variant = variant  # Store which variant we want to use
