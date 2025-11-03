@@ -84,9 +84,14 @@ params.lr = 0.001
 # CNN architecture
 [[model]]
 name = "uci-har_cnn_simple"
-params.filters = [5, 5]        # Two conv layers with 5 filters each
-params.kernel_sizes = [2, 2]   # 2x2 kernels
-params.pool_sizes = [2, 0]     # Pooling after first conv layer
+params.dims = 1               # 1D convolutions
+params.filters      = [5, 5]  # Two convolution layers with 5 filters each
+params.kernel_sizes = [2, 2]  # Kernel of length 2 for each convolution layer
+params.pool_sizes   = [2, 0]  # Pooling after first convolution layer
+params.paddings     = [0, 0]  # No padding for each convolution layer
+params.strides      = [1, 1]  # Stride of 1 for each convolution layer
+params.dropouts     = [0, 0]  # No dropout layer
+params.fc_units     = []      # No additional fully-connected layer
 
 # Optional: Deployment configuration
 [deploy]
