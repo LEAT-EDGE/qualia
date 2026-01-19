@@ -64,9 +64,10 @@ kind = "SpikingJellyMultiStep"  # Multi-step processing for efficiency
 [deploy]
 target = "Linux"
 converter.kind = "QualiaCodeGen"
-quantize = ["float32"]
+converter.params.timestep_mode = "duplicate" 
+quantize = ["int16"]
 optimize = [""]
-compress = [1]
+compress = [1]  
 
 [dataset]
 kind = "GSC"
@@ -210,10 +211,11 @@ params.fifo_size = 64
 params.total_spikerate_exclude_nonbinary = true
 ```
 
-1. The "FuseBatchNorm" [postprocessing] allows you to fuse Batch normalization layers with convolution layers, allowing SNN deployment on hardware (by removing the float computation between these layers).
-2. We use here the [postprocessing] "QuantizationAwareTraining" to quantize our network in 16-bit fixed point.
-3. The [postprocessing] "OperationCounter" will output the analysis of the operations in our network after a `qualia config.toml train` command.
-4. The [postprocessing] "EnergyEstimationMetric" will provide insights into your network's behavior, including average spike rates per layer and estimated energy consumption after a `qualia config.toml train` command.
+1. The 'timestep_mode' used in the converter helps to indicate how the data will be used in the timesteps. The 'duplicate' mode will duplicate the same input or all timesteps will the 'iterate' mode will iterate on the data for different inputs at each timestep.
+2. The "FuseBatchNorm" [postprocessing] allows you to fuse Batch normalization layers with convolution layers, allowing SNN deployment on hardware (by removing the float computation between these layers).
+3. We use here the [postprocessing] "QuantizationAwareTraining" to quantize our network in 16-bit fixed point.
+4. The [postprocessing] "OperationCounter" will output the analysis of the operations in our network after a `qualia config.toml train` command.
+5. The [postprocessing] "EnergyEstimationMetric" will provide insights into your network's behavior, including average spike rates per layer and estimated energy consumption after a `qualia config.toml train` command.
 
 
 *Tips:* You can load and test only a model by adding load and train options in the model section like:
