@@ -29,7 +29,7 @@ In this part, we will see how to prepare your environment setup before the insta
 
 ### Working Directory Tree
 To properly work with Qualia, we suggest using the following project tree. 
-We will create your work directory 'qualia' and inside install the virtual environment (see below) and the core and plugins folders.
+We will create your work directory 'qualia' and inside create the virtual environment (see below) and the core and plugins folders.
 After the installation, you will have the following directory tree: 
 
 ```bash
@@ -65,11 +65,6 @@ qualia_env\Scripts\activate     # Windows
 _(Recommended)_ For using and modifying Qualia's components, follow these steps in the qualia folder:
 
 ```bash
-qualia/
-├── qualia_env/          # The Qualia venv created using uv 
-```
-
-```bash
 # Clone Qualia Core repository 
 git clone https://github.com/LEAT-EDGE/qualia-core.git
 
@@ -82,7 +77,7 @@ uv pip install -e .
 uv pip install -e .[pytorch]
 
 # (choice) For all available components:
-uv pip install -e .[codegen,tensorflow,pytorch,gtsrb,gsc,dataaugmentation_image,clearml,visualize,deployment-sparkfunedge,evaluation-host-tflite,evaluation-target-qualia,tests,lint,typecheck,docs]
+uv pip install -e .[tensorflow,pytorch,gtsrb,gsc,dataaugmentation_image,clearml,visualize,deployment-sparkfunedge,evaluation-host-tflite,evaluation-target-qualia,tests,lint,typecheck,docs]
 
 # Repeat the above steps for Qualia Codegen Core
 # Return to qualia folder
@@ -104,7 +99,7 @@ You may also need to install these packages:
 sudo apt install cmake ninja-build git gcc
 ```
 
-CMake, ninja-build, and gcc are used for compiling C code. CMake needs to be at least version 3.28. If not, and your Ubuntu version is not 24, you can install it using: 
+CMake, ninja-build, and gcc are used for compiling C code. CMake needs to be at least version 3.28. If your Ubuntu version is lower than 24.04and CMake is not at least 3.28: 
 
 ```bash
 uv pip install cmake
@@ -145,7 +140,7 @@ For a ready-to-use environment with GPU support, use our Docker container.
 Qualia uses a modular system. Add features by including them in brackets:
 
 ```bash
-uv pip install "qualia-core[pytorch,clearml,visualize]"
+uv pip install "qualia-core[codegen,tensorflow,pytorch,gtsrb,gsc,dataaugmentation_image,clearml,visualize,deployment-sparkfunedge,evaluation-host-tflite,evaluation-target-qualia,tests,lint,typecheck,docs]"
 ```
 
 Available options:
@@ -156,5 +151,6 @@ Available options:
 - Deployment: `[deployment-sparkfunedge]`, `[evaluation-host-tflite]`, `[evaluation-target-qualia]`
 
 ## Qualia Components
-If you want to take a look at all the available components, here is the link: [Optional Components](Components.md). 
+If you want to take a look at all the available components, here is the link: [Optional Components](Components.md).
 
+If you want to use Qualia for Spiking Neural Networks (SNN), here is the link: [Plugins SNN](../Plugins/PluginSNN/GettingStartedSNN.md).
