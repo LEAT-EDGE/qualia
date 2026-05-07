@@ -1,5 +1,123 @@
 # Changelog
 
+## 2.6.0 (07/05/2026)
+
+### Qualia-Core
+
+#### New features
+- Bump max Python version to 3.14.
+- Add `includes` and `include_search_paths` parameter in configuration file to include a TOML file in another TOML file.
+- Add `command.Deploy` and `deploy` subcommand for qualia command line interface.
+- Add `command.Evaluate` and `evaluate` subcommand for qualia command line interface.
+- Add `dataset.CIFAR100`.
+- Add `dataset.EuroSAT`.
+- Add `experimenttracking.QualiaDatabase`: custom local SQLite3 database to track results of an entire Qualia experiment workflow.
+- Add `learningmodel.pytorch.QuantizedResNetStride`.
+- `datamodel.RawDataSet`: add `RawDataChunks*` classes for mmapped-save/load of data and save of chunked data lazily-preprocessed with generator (avoid loading entire dataset in memory at once for supported datasets and preprocessing).
+- `dataaugmentation.pytorch.MFCC`: add `dims` param to output 2D data with 1 channel instead of 1D data with MFCC coefs as channels.
+- `dataset.CIFAR`: chunked loading and preprocessing.
+- `dataset.GSC`: add loading of `_background_noise_` class and tensorflow 12-class subset.
+- `evaluation.host.Qualia`: add `max_workers` params to limit RAM usage.
+- `evaluation.host.Qualia`: add `save_preds` param to optionally save predictions to file.
+- `learningframework.CustomScheduler.SinDescent`: fix compatibility with PyTorch 2.7.0.
+- `learningframework.PyTorch`: add `mape` metric.
+- `learningmodel.keras.CNN`: add `strides` param.
+- `learningmodel.pytorch.CNN`: add `separables` params to implement some conv layers as depthwise-pointwise combination.
+- `learningmodel.pytorch.ResNetStride`: add GSP.
+- `postprocessing.QualiaCodeGen`: add `dump_featuremaps` param.
+- `postprocessing.QualiaCodeGen`: add `model_name` param to set custom model inference function name.
+- `preprocessing.Class2BinMatrix`: support chunked preprocessing.
+- `preprocessing.Normalize`: support chunked preprocessing.
+
+#### Bug fixes
+- Do not require `deploy.quantize` in configuration file (some converters may not need it).
+- Avoid some circular import in TYPE_CHECKING for docs.
+- `assets/projects/stm32cubeai/NucleoL452REP`: disable compiler optimizations, broken with X-CUBE-AI.
+- `dataset.GSC`: fix file paths lookup on Windows.
+- `dataset.GSC`: fix multiprocessing shared memory handling on Windows.
+- `deployment.qualia_codegen.Nucleo*`: use `CMAKE_TOOLCHAIN_FILE` to set cross-compiler (prevents conflict from early detection of host compiler).
+- `deployment.qualia_codegen.Windows`: use Linux output directory used by `evaluation.host.Qualia` evaluator.
+- `docs/conf.py`: fix PyTorch intersphinx URL.
+- `evaluation.host.Qualia`: prepend `test_` to metric names to match PyTorch metric names.
+- `evaluation.STM32CubeAI`: fix on-target evaluation.
+- `learningframework.PyTorch`: set metrics prefix to dataset type (train, test…) during evaluation.
+- `postprocessing.FuseBatchNorm`: update `metrics`, `params`, `mem_params` in TrainResult
+- `postprocessing.VisualizeFeatureMaps`: average over samples of the dataset.
+- `preprocessing.Class2BinMatrix`: force float32 dtype for better compatibility across PyTorch backends (e.g., MPS).
+- `utils.path`: fix `Traversable` import for Python >=3.11.
+- `typing`: fix for Python 3.10.
+
+#### Breaking changes
+- Add underscore in metrics name (e.g., `test_acc`).
+- `evaluation.target.Qualia`: return time in seconds.
+- `learningmodel.pytorch.CNN`: add ReLU before GSP to match with SCNN.
+- `learningmodel.pytorch.{CNN,QuantizedCNN}`: conv biases are now disabled when batchnorm is enabled.
+- `learningmodel.pytorch.{CNN,QuantizedCNN}`: layers are now inside a `layers` container, previous weights files will not load.
+- `learningmodel.pytorch.ResNetSampleNorm`: rename `force_projection_with_stride` to `force_projection_with_pooling`.
+- `postprocessing.QuantizationAwareTraining`: add `*_bits` to `activations_range.txt` output.
+
+### Qualia-Plugin-SNN
+
+#### New features
+- Bump max Python version to 3.14.
+- Add `dataset.SSC`.
+- Add `experimenttracking.QualiaDatabase`: extends Qualia-Core's `experimenttracking.QualiaDatabase` with SNN metadata.
+- Add `learningmodel.pytorch.{QuantizedSMLP,SMLP}`.
+- Add `learningmodel.pytorch.{QuantizedSResNetStride,SResNetStride}`.
+- `datamodel.EventDataModel`: add `EventDataChunks*` classes for mmapped-save/load of data and save of chunked data lazily-preprocessed with generator (avoid loading entire dataset in memory at once for supported datasets and preprocessing).
+- `dataset.DVSGesture`: chunked loading and preprocessing.
+- `learningframework.SpikingJelly`: enable loading of additional experimenttrackings in plugin.
+- `learningmodel.pytorch.SCNN`: add `separables` params to implement some conv layers as depthwise-pointwise combination.
+- `postprocessing.{EnergyEstimationMetric,OperationCounter}`: Add model name in CSV file name.
+- `postprocessing.QualiaCodeGen`: add `dump_featuremaps` param.
+- `postprocessing.QualiaCodeGen`: add `model_name` param to set custom model inference function name.
+- `preprocessing.Group2TimeStepsBySample`: handle chunked preprocessing.
+- `preprocessing.IntegrateEventsByFixedDuration`: handle chunked preprocessing.
+- `preprocessing.IntegrateEventsByFixedFramesNumber`: handle chunked preprocessing.
+
+#### Bug fixes
+- Avoid some circular import in TYPE_CHECKING for docs.
+- `dataset.DVSGestureWithPreprocessing`: fix multiprocessing shared memory handling on Windows.
+- `dataset.SHD`: decompress then parse file, much faster than on-the-fly decompression (×25).
+- `docs/conf.py`: fix PyTorch intersphinx URL.
+- `learningmodel.pytorch`: use SpikingJelly-wrapped `GlobalSumPool` layers to fix spike count in `postprocessing.EnergyEstimationMetric`.
+
+#### Breaking changes
+- `learningmodel.pytorch.SCNN`: add activation after final classification layer with GSP.
+
+### Qualia-CodeGen-Core
+
+#### New features
+- Bump max Python version to 3.14.
+- Add `Upsample` layer (PyTorch only).
+- `Converter`: add `dump_featuremaps` param to dump feature maps to CSV.
+- `Converter`: add `model_name` param to set custom model inference function name.
+- `examples/Linux/main.cpp`: optionally save predictions to file.
+- `graph.KerasModelGraph`: add support for `GlobalAveragePooling` (`keepdims=True` only).
+- `libqualia-neuralnetwork`: add `MeanAbsolutePercentageError` metric.
+
+#### Bug fixes
+- `Allocator`: prevent crash for non-last nodes with no output node.
+- `Converter`: fix `Traversable` import for Python 3.10.
+- `docs/conf.py`: fix PyTorch intersphinx URL.
+- `examples/Nucleo*`: split toolchain definitions to `Toolchain-arm-none-eabi.cmake` to avoid early detection conflict with host toolchain.
+- `libqualia-neuralnetwork/Metrics/{MeanAbsoluteError,MeanSquaredError}`: average over each sample of output vector.
+- `libqualia-neuralnetwork/NeuralNetwork.h`: de-quantize predictions for metrics computation and always compute as float to get correct results for MSE/MAE/MAPE.
+
+### Qualia-CodeGen-Plugin-SNN
+
+#### New features
+- Bump max Python version to 3.14.
+- `assets/layers/{if,lif}.cc`: support flat input (e.g., after flatten) in 1D mode.
+- `Converter`: add `dump_featuremaps` param to dump feature maps to CSV.
+- `Converter`: add `model_name` param to set custom model inference function name.
+
+#### Bug fixes
+- `assets/layers/lif.cc`: fix for `decay_input=false`.
+- `assets/model.cc`: model input is used for all layers with `TInputLayer` as preceding layer instead of just the first layer.
+- `docs/conf.py`: fix PyTorch intersphinx URL.
+- `libqualia-neuralnetwork/SpikingNeuralNetwork.h`: de-quantize predictions for metrics computation and always compute as float to get correct results for MSE/MAE/MAPE.
+
 ## 2.5.0 (19/02/2025)
 
 ### Qualia-Core
