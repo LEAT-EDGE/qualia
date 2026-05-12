@@ -10,3 +10,4 @@ Plugins SNN
    PluginSNN/InstallationSNN
    PluginSNN/ConfigurationFileSNN
    PluginSNN/EnergyEstimationMetric
+   PluginSNN/GettingStartedQualiabench
