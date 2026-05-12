@@ -1,7 +1,7 @@
 # Installation of Qualia SNN plugin
 
-Qualia SNN plugin is dependent on Qualia-core.  
-Before starting this installation, you need to have Qualia-core and Qualia-Codegen-Core installed with the appropriate virtual environment (see: [Qualia Installation](../../GettingStarted/Installation.md)).
+Qualia SNN plugin is dependent on Qualia-Core.
+Before starting this installation, you need to have Qualia-Core and Qualia-Codegen-Core installed with the appropriate virtual environment (see: [Qualia Installation](../../GettingStarted/Installation.md)).
 
 ## Working Directory & Virtual Environment
 

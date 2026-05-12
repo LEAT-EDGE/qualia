@@ -19,8 +19,8 @@ It's a modular system composed of multiple components or plugins that work toget
 ## Before You Begin
 
 ### System Requirements
-- Python >= 3.9, <= 3.12 (recommended: 3.12) if you want to use system Python.
-- CMake >= 3.24 (capitalized "CMake")
+- Python >= 3.9, <= 3.14 (recommended: >= 3.11) if you want to use system Python.
+- CMake >= 3.24
 - Git
 - For GPU support: NVIDIA GPU with appropriate drivers
 
@@ -99,7 +99,7 @@ You may also need to install these packages:
 sudo apt install cmake ninja-build git gcc
 ```
 
-CMake, ninja-build, and gcc are used for compiling C code. CMake needs to be at least version 3.28. If your Ubuntu version is lower than 24.04and CMake is not at least 3.28: 
+CMake, ninja-build, and gcc are used for compiling C code. CMake needs to be at least version 3.15 (3.28 or newer recommended). If your Ubuntu version is lower than 24.04 and CMake is not at least 3.15:
 
 ```bash
 uv pip install cmake

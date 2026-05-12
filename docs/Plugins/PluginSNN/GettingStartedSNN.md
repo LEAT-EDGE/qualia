@@ -6,14 +6,13 @@ This guide will walk you through creating your first Spiking Neural Network (SNN
 ## Prerequisites
 
 Before starting, ensure you have:
-- Qualia-core and have followed the [Installation](../../GettingStarted/Installation)
-- Python (version 3.9-3.12, recommended: 3.12)
-- Git installed
+- Qualia-Core and have followed the [Installation guide](../../GettingStarted/Installation)
+
 ## Installation
-After installing Qualia-core, follow the [Installation of the SNN plugin](./InstallationSNN).
+After installing Qualia-Core, follow the [Installation of the SNN plugin](./InstallationSNN).
 
 ## Project Setup
-Let's set up our working environment:  
+Let's set up our working environment:
 For each Qualia project, we recommend working in a dedicated project directory.
 
 
@@ -247,4 +246,4 @@ The Qualia-SNN framework offers many possibilities for experimentation and optim
 Remember that training SNNs often requires more patience than traditional neural networks, as the discrete nature of spikes can make learning more challenging. Don't be discouraged if you need to adjust learning rates or training duration to achieve optimal results.
 
 You can also deploy and evaluate your SNNs on our Qualia-Bench online platform to share and compare your results deployed on neuromorphic hardware with our Benchmark.  
-[QualianBench Neuromorphic Benchmark](GettingStatedQualiabench.md)
+[Qualia-Bench Neuromorphic Benchmark](GettingStartedQualiabench)

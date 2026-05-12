@@ -7,22 +7,20 @@ We'll re-use the model weight and configuration file provided in the [Getting St
 ## Prerequisites
 
 Before starting, ensure you have:
-- Qualia-core and have followed the [Installation](../../GettingStarted/Installation)
-- Qualia-plugin-SNN and have followed the [Installation](InstallationSNN.md)
-- Python (version 3.9-3.12, recommended: 3.12)
-- Git installed
+- Qualia-Core and have followed the [Installation guide](../../GettingStarted/Installation)
+- Qualia-Plugin-SNN and have followed the [Installation guide](InstallationSNN.md)
 
 ## Qualia Bench
 Qualia Bench is an online platform to benchmark, analyse and compare SNN solutions with and without neuromorphic hardware.  
 It allows you to upload your experiment and model weights to run performance, operations, energy and deployment analysis.  
-Qualia Bench is publicly accessible at this address: [Qualia Bench](https://qualiabench.univ-cotedazur.fr/qualiabench/frontend).  
+Qualia Bench is publicly accessible at this address: [Qualia Bench](https://qualiabench.univ-cotedazur.fr/).  
 Qualia Bench is not a training platform. It only deploys and evaluates models that were previously designed and trained locally with Qualia.
 
 ### Login
 
 You can explore Qualia Bench public results without an account. But to upload, evaluate, manage groups and share or download content you need an account.
 
-To create an account you need to contact Pr Benoit Miramond at Benoit.miramond@univ-cotedaur.fr .
+To create an account you need to contact Pr. Benoît Miramond at <benoit.miramond@univ-cotedazur.fr>.
 
 Once done, click on the connect button on the top right corner.
 
@@ -31,10 +29,10 @@ Once done, click on the connect button on the top right corner.
 On the Qualia Bench Home page you can access all the functionalities of the platform.
 1. Models: Allows you to see and access all public models or those shared with you.
 2. Datasets: Allows you to see all available datasets for the benchmark.
-3. Generator: Helps to build configuration files like "Config.toml".
+3. Generator: Helps to build configuration files like "config.toml".
 4. Groups: Allows you to see all the created and available groups.
-5. MyProfil: Allows you to check your information and see all your models (private/shared with group / public).
-6. MyGroups: Allows you to see and manage groups you're in, see other members and share models within the group.
+5. My Profile: Allows you to check your information and see all your models (private/shared with group / public).
+6. My Groups: Allows you to see and manage groups you're in, see other members and share models within the group.
 
 ![Qualia Bench Home.](QualiaBenchInterface.png "Qualia Bench Home")
 
@@ -46,7 +44,7 @@ We will use the configuration files provided in the [Getting Started SNN](Gettin
 ### Prerequisite
 For this tutorial you'll need the config.toml file and the network weight available in your directory:
 - Trained model weights: `out/learningmodel/gsc_scnn_tutorial_r1.pth`
-- Config.toml file from the SNN tutorial with the operation counter and energy estimation post processing.
+- config.toml file from the SNN tutorial with the operation counter and energy estimation post processing.
 
 ### Upload the model
 On "My Profile", in the "My Models" section click on the "Add Model" button.
